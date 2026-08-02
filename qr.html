@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0a0f1e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Where Did I Park? - QR</title>
+<style>
+  :root{
+    --bg0:#0a0f1e; --bg1:#101830;
+    --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.10);
+    --stroke:rgba(255,255,255,.12);
+    --text:#f4f7ff; --muted:#93a1c0;
+    --green:#34d59b; --red:#ff6b6b; --amber:#ffb64d;
+    --grad:linear-gradient(135deg,#34d59b,#1fb98c);
+    --gradB:linear-gradient(135deg,#4f8ef7,#7b6cff);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:
+      radial-gradient(90vw 60vh at 85% -10%, rgba(52,213,155,.16), transparent 60%),
+      radial-gradient(80vw 50vh at -10% 100%, rgba(79,142,247,.15), transparent 60%),
+      linear-gradient(180deg,var(--bg0),var(--bg1));
+    background-attachment:fixed;
+    color:var(--text); display:flex; justify-content:center; min-height:100%;
+  }
+  .phone{width:100%; max-width:430px; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column}
+  .screen{
+    display:none; flex:1; flex-direction:column;
+    padding:max(20px, env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .screen.active{display:flex; animation:rise .35s cubic-bezier(.2,.8,.25,1)}
+  .screen > *{flex-shrink:0}
+  @keyframes rise{from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none}}
+
+  header{display:flex; align-items:center; gap:10px; margin-bottom:12px}
+  header .back{width:38px;height:38px;border-radius:12px;border:1px solid var(--stroke);background:var(--glass);color:var(--text);font-size:1.3rem;cursor:pointer;flex:none}
+  header h1{font-size:1.22rem; font-weight:700}
+  .sub{color:var(--muted); font-size:.85rem; margin-top:2px}
+
+  .hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; text-align:center}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; letter-spacing:.4px; color:var(--muted)}
+  .brand .dot{width:10px;height:10px;border-radius:3px;background:var(--grad)}
+  .hero h2{font-size:1.6rem; font-weight:800}
+  .hero p{color:var(--muted); font-size:.93rem; max-width:300px; line-height:1.5}
+
+  .bigbtn{
+    width:180px;height:180px;border-radius:36px;border:none;cursor:pointer;
+    background:var(--grad); color:#04231a; font-family:inherit; font-size:1.1rem; font-weight:800;
+    box-shadow:0 18px 50px rgba(52,213,155,.4), inset 0 2px 10px rgba(255,255,255,.4);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    transition:transform .12s ease;
+  }
+  .bigbtn:active{transform:scale(.93)}
+  .bigbtn .icon{font-size:2.4rem}
+  .ghostbtn{
+    width:100%; padding:16px; border-radius:18px; border:1px solid rgba(79,142,247,.5);
+    background:rgba(79,142,247,.08); color:#8fb8ff; font-family:inherit; font-size:1.02rem; font-weight:700; cursor:pointer;
+  }
+  .ghostbtn:disabled{opacity:.3}
+  .savedcard{
+    width:100%; background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
+    padding:14px 16px; display:flex; align-items:center; gap:12px; text-align:left;
+  }
+  .savedcard .ok{width:38px;height:38px;border-radius:12px;background:var(--grad);color:#04231a;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+  .savedcard b{font-size:.95rem}
+  .savedcard small{color:var(--muted)}
+
+  /* SCAN */
+  .scanwrap{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px}
+  .viewfinder{position:relative; width:250px; height:250px; border-radius:20px; background:rgba(255,255,255,.03); overflow:hidden}
+  .corner{position:absolute; width:36px; height:36px; border:4px solid var(--green); border-radius:4px}
+  .c1{top:10px;left:10px;border-right:none;border-bottom:none}
+  .c2{top:10px;right:10px;border-left:none;border-bottom:none}
+  .c3{bottom:10px;left:10px;border-right:none;border-top:none}
+  .c4{bottom:10px;right:10px;border-left:none;border-top:none}
+  .scanline{position:absolute; left:16px; right:16px; height:3px; border-radius:2px;
+    background:linear-gradient(90deg,transparent,var(--green),transparent); top:20px; opacity:0}
+  .scanning .scanline{opacity:1; animation:sweep 1s ease-in-out infinite}
+  @keyframes sweep{0%{top:20px}50%{top:226px}100%{top:20px}}
+  .qr-mock{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:.35; font-size:5.5rem}
+  .scanhint{color:var(--muted); font-size:.92rem; text-align:center; max-width:280px; line-height:1.5}
+  .shutter{
+    width:100%; padding:16px; border-radius:18px; border:none; background:var(--grad);
+    color:#04231a; font-family:inherit; font-size:1.05rem; font-weight:800; cursor:pointer;
+    box-shadow:0 14px 34px rgba(52,213,155,.35);
+  }
+  .shutter:disabled{opacity:.5}
+
+  /* CONFIRM */
+  .confirm{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center}
+  .checkwrap{width:104px;height:104px}
+  .checkwrap svg{width:100%;height:100%}
+  .checkwrap .c{stroke:var(--green);stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:320;stroke-dashoffset:320;animation:draw .7s ease forwards}
+  .checkwrap .m{stroke:var(--green);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:80;animation:draw .5s ease .55s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .confirm h2{font-size:1.45rem; font-weight:800}
+  .loc-pill{background:var(--glass2); border:1px solid var(--stroke); border-radius:14px; padding:12px 20px; font-size:1.15rem; font-weight:800}
+  .time{font-size:1rem; color:var(--green); font-weight:700; font-variant-numeric:tabular-nums}
+  .confirm p{color:var(--muted); font-size:.92rem; max-width:280px; line-height:1.5}
+  .primary{
+    width:100%; max-width:300px; padding:15px; border-radius:16px; border:none; margin-top:8px;
+    background:var(--grad); color:#04231a; font-family:inherit; font-size:1.02rem; font-weight:800; cursor:pointer;
+  }
+
+  /* DIRECTION */
+  .dir-card{
+    background:var(--gradB); border-radius:20px; padding:16px; margin-bottom:12px; text-align:center;
+    box-shadow:0 18px 44px rgba(79,142,247,.35);
+  }
+  .dir-card .you{font-size:.82rem; opacity:.9; text-transform:uppercase; letter-spacing:.8px}
+  .dir-card .target{font-size:1.9rem; font-weight:900; margin:4px 0}
+  .dir-card .meta{font-size:.9rem; opacity:.95}
+  .arrowwrap{display:flex; justify-content:center; margin:14px 0 6px}
+  .arrow{font-size:3.4rem; line-height:1; animation:bob 1.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(4px)}50%{transform:translateY(-4px)}}
+  .diagram{background:var(--glass); border:1px solid var(--stroke); border-radius:16px; padding:14px 10px 10px; margin-bottom:12px}
+  .diagram svg{width:100%; height:auto; display:block}
+  .dg-cap{font-size:.75rem; color:var(--muted); text-align:center; margin-top:6px}
+  .rowbtns{display:flex; gap:10px; margin-top:auto; padding-top:4px}
+  .rescanbtn{flex:1; padding:13px 8px; border-radius:14px; border:1px solid var(--stroke); background:var(--glass); color:var(--text); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer}
+  .endbtn{flex:1.3; padding:13px 8px; border-radius:14px; border:1px solid rgba(255,107,107,.5); background:rgba(255,107,107,.08); color:var(--red); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer}
+
+  .dialog-bg{position:fixed; inset:0; background:rgba(2,5,12,.7); display:none; align-items:flex-end; justify-content:center; z-index:40; padding:18px}
+  .dialog-bg.show{display:flex}
+  .dialog{background:#151d33; border:1px solid var(--stroke); border-radius:24px; padding:24px; width:100%; max-width:392px; text-align:center; animation:rise .3s cubic-bezier(.2,.8,.25,1); margin-bottom:env(safe-area-inset-bottom)}
+  .dialog h3{margin-bottom:8px; font-size:1.12rem}
+  .dialog p{color:var(--muted); font-size:.9rem; margin-bottom:16px; line-height:1.5}
+  .dialog .btns{display:flex; gap:10px}
+  .dialog button{flex:1; padding:13px; border-radius:14px; border:none; font-family:inherit; font-weight:800; cursor:pointer; font-size:.95rem}
+  .dialog .cancel{background:var(--glass2); color:var(--text)}
+  .dialog .ok-red{background:var(--red); color:#fff}
+
+  .warnbox{display:none; background:rgba(255,182,77,.12); border:1px solid rgba(255,182,77,.55);
+    color:#ffcf8a; border-radius:12px; padding:10px 14px; font-size:.85rem; margin-top:8px}
+  .warnbox.show{display:block; animation:rise .25s ease}
+  .field.missing .chips{outline:1.5px dashed rgba(255,182,77,.7); outline-offset:5px; border-radius:12px}
+  .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
+  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
+    display:flex;align-items:center;justify-content:center;font-size:2.6rem}
+  .ended h2{font-size:1.4rem;font-weight:800}
+  .ended p{color:var(--muted); font-size:.93rem; max-width:290px; line-height:1.5}
+  .errbox{background:rgba(255,107,107,.12); border:1px solid rgba(255,107,107,.5); color:#ffb3b3;
+    border-radius:14px; padding:12px 14px; font-size:.88rem; line-height:1.45; text-align:center}
+</style>
+</head>
+<body>
+
+
+<div class="phone">
+
+  <!-- HOME -->
+  <section class="screen active" id="scr-home">
+    <div class="hero">
+      <div class="brand"><span class="dot"></span>WHERE DID I PARK? · QR</div>
+      <div>
+        <h2 id="home-title">Vừa đỗ xe xong?</h2>
+        <p id="home-sub">Quét mã QR trên cột gần nhất — vị trí được lưu chính xác tuyệt đối, không cần gõ gì.</p>
+      </div>
+      <button class="bigbtn" id="btn-save" onclick="startScan('save')">
+        <span class="icon">▣</span>Quét cột để lưu
+      </button>
+      <div class="savedcard" id="saved-badge" style="display:none">
+        <div class="ok">✓</div>
+        <div><b id="badge-loc"></b><br><small id="badge-time"></small></div>
+      </div>
+      <button class="ghostbtn" id="btn-find" onclick="startFind()" disabled>🔍 Tìm xe</button>
+    </div>
+  </section>
+
+  <!-- SCAN -->
+  <section class="screen" id="scr-scan">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1 id="scan-title">Quét mã trên cột</h1><div class="sub" id="scan-sub"></div></div>
+    </header>
+    <div class="scanwrap">
+      <div class="viewfinder" id="viewfinder">
+        <div class="qr-mock">▣</div>
+        <div class="corner c1"></div><div class="corner c2"></div>
+        <div class="corner c3"></div><div class="corner c4"></div>
+        <div class="scanline"></div>
+      </div>
+      <div class="scanhint" id="scan-hint">Hướng khung vào mã QR dán trên cột, rồi bấm Quét.</div>
+      <button class="shutter" id="btn-shutter" onclick="doScan()">Quét</button>
+    </div>
+  </section>
+
+  <!-- SAVED CONFIRM -->
+  <section class="screen" id="scr-confirm">
+    <div class="confirm">
+      <div class="checkwrap">
+        <svg viewBox="0 0 110 110"><circle class="c" cx="55" cy="55" r="50"/><path class="m" d="M34 57 l14 14 l28 -30"/></svg>
+      </div>
+      <h2>Đã lưu vị trí xe!</h2>
+      <div class="loc-pill">Hầm B1 · Khu C · Cột C2</div>
+      <div class="time" id="confirm-time"></div>
+      <p>Tầng, khu, cột được đọc thẳng từ mã trên cột — không thể nhớ sai. Cứ yên tâm mua sắm.</p>
+      <button class="primary" onclick="goHome()">Về màn hình chính</button>
+    </div>
+  </section>
+
+  <!-- FIND START -->
+  <section class="screen" id="scr-findstart">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Không thấy xe?</h1><div class="sub">Đừng lo — cột nào cũng cứu được bạn</div></div>
+    </header>
+    <div class="hero">
+      <p style="max-width:300px">Bạn có thể đã đi ra bằng lối khác. Hãy <b style="color:var(--green)">quét mã QR trên cột bất kỳ gần bạn</b> — ứng dụng sẽ so với vị trí xe và chỉ hướng đi.</p>
+      <button class="bigbtn" onclick="startScan('find')"><span class="icon">▣</span>Quét cột gần bạn</button>
+    </div>
+  </section>
+
+  <!-- DIRECTION -->
+  <section class="screen" id="scr-direction">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Chỉ đường tới xe</h1><div class="sub" id="dir-when"></div></div>
+    </header>
+    <div class="dir-card">
+      <div class="you">Bạn đang ở cột E1</div>
+      <div class="target">Xe ở Cột C2</div>
+      <div class="meta">cách khoảng 40 m · đi ngang 2 dãy</div>
+      <div class="arrowwrap"><div class="arrow">⬆</div></div>
+    </div>
+    <div class="diagram">
+      <svg viewBox="0 0 320 120">
+        <g stroke="#93a1c0" stroke-width="2" fill="none">
+          <rect x="30" y="20" width="22" height="80" rx="3"/>
+          <rect x="149" y="20" width="22" height="80" rx="3"/>
+          <rect x="268" y="20" width="22" height="80" rx="3"/>
+        </g>
+        <text x="41" y="14" text-anchor="middle" fill="#93a1c0" font-size="12" font-weight="700">E1</text>
+        <text x="160" y="14" text-anchor="middle" fill="#93a1c0" font-size="12">D3</text>
+        <text x="279" y="14" text-anchor="middle" fill="#34d59b" font-size="12" font-weight="700">C2</text>
+        <circle cx="41" cy="60" r="7" fill="#4f8ef7"/>
+        <circle cx="279" cy="60" r="8" fill="#34d59b"/>
+        <path d="M52 60 C 100 40, 220 40, 266 58" stroke="#34d59b" stroke-width="3" fill="none" stroke-dasharray="7 5"/>
+        <path d="M258 52 l10 6 l-11 4 z" fill="#34d59b"/>
+      </svg>
+      <div class="dg-cap">Vị trí của bạn (xanh dương) và xe (xanh lá) trên các dãy cột</div>
+    </div>
+    <div class="rowbtns">
+      <button class="rescanbtn" onclick="startScan('find')">▣ Quét lại</button>
+      <button class="endbtn" onclick="askEnd()">Kết thúc phiên &amp; xóa</button>
+    </div>
+  </section>
+
+
+  <!-- QR ERROR -->
+  <section class="screen" id="scr-qrerror">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Không đọc được mã</h1><div class="sub">Mã QR bị mờ hoặc thiếu sáng</div></div>
+    </header>
+    <div class="scanwrap">
+      <div class="viewfinder" style="opacity:.45">
+        <div class="qr-mock">▣</div>
+        <div class="corner c1" style="border-color:var(--red)"></div><div class="corner c2" style="border-color:var(--red)"></div>
+        <div class="corner c3" style="border-color:var(--red)"></div><div class="corner c4" style="border-color:var(--red)"></div>
+      </div>
+      <div class="errbox">Mã trên cột có thể bị mờ, bong tróc hoặc thiếu sáng.<br>Hãy thử lại, hoặc đi tới cột khác gần đó - cột nào cũng dùng được.</div>
+      <button class="shutter" onclick="retryScan()">Thử quét lại</button>
+      <button class="rescanbtn" style="width:100%" onclick="goHome()">Tìm cột khác</button>
+    </div>
+  </section>
+
+  <!-- ENDED -->
+  <section class="screen" id="scr-ended">
+    <div class="ended">
+      <div class="bin">🗑️</div>
+      <h2>Đã kết thúc phiên</h2>
+      <p>Toàn bộ dữ liệu vị trí xe đã được xóa khỏi máy của bạn.</p>
+      <button class="primary" style="max-width:280px" onclick="goHome()">Bắt đầu phiên mới</button>
+    </div>
+  </section>
+
+  <div class="dialog-bg" id="end-dialog">
+    <div class="dialog">
+      <h3>Đã tìm thấy xe?</h3>
+      <p>Chỉ kết thúc khi bạn đã đứng cạnh xe. Vị trí đã lưu sẽ được xóa khỏi máy.</p>
+      <div class="btns">
+        <button class="cancel" onclick="hideEnd()">Chưa thấy</button>
+        <button class="ok-red" onclick="endSession()">Đã thấy xe, kết thúc</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let state={savedAt:null, elapsed:null, startedAt:null};
+let scanMode='save';
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const sc=$(id); sc.classList.add('active'); sc.scrollTop=0;
+}
+
+function startScan(mode){
+  scanMode=mode;
+  if(mode==='save' && !state.startedAt) state.startedAt=Date.now();
+  $('scan-title').textContent = mode==='save' ? 'Quét mã trên cột' : 'Quét cột gần bạn';
+  $('scan-sub').textContent = mode==='save' ? 'để lưu vị trí xe' : 'để định vị và chỉ đường';
+  $('scan-hint').textContent = 'Hướng khung vào mã QR dán trên cột, rồi bấm Quét.';
+  $('btn-shutter').disabled=false;
+  $('viewfinder').classList.remove('scanning');
+  show('scr-scan');
+}
+
+let qrFailUsed=false;
+function retryScan(){ startScan(scanMode); }
+function doScan(){
+  const vf=$('viewfinder');
+  vf.classList.add('scanning');
+  $('btn-shutter').disabled=true;
+  $('scan-hint').textContent='Đang đọc mã…';
+  setTimeout(()=>{
+    vf.classList.remove('scanning');
+    if(scanMode==='find' && !qrFailUsed){
+      qrFailUsed=true;
+      show('scr-qrerror');
+      return;
+    }
+    if(scanMode==='save'){
+      state.savedAt=Date.now();
+      state.elapsed=(state.savedAt-state.startedAt)/1000;
+      try{localStorage.setItem('wdipqr',JSON.stringify(state));}catch(e){}
+      $('confirm-time').textContent='trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
+      show('scr-confirm');
+    }else{
+      $('dir-when').textContent='Đã nhận diện: bạn đang ở cột E1';
+      show('scr-direction');
+    }
+  }, 1100);
+}
+
+function startFind(){ show('scr-findstart'); }
+
+function goHome(){
+  const has=!!state.savedAt;
+  $('btn-find').disabled=!has;
+  $('saved-badge').style.display=has?'flex':'none';
+  $('btn-save').style.display=has?'none':'flex';
+  $('home-title').textContent=has?'Xe đã được ghi nhớ 👌':'Vừa đỗ xe xong?';
+  $('home-sub').textContent=has?'Khi quay ra, bấm Tìm xe rồi quét cột bất kỳ gần bạn.':'Quét mã QR trên cột gần nhất — vị trí được lưu chính xác tuyệt đối, không cần gõ gì.';
+  if(has){
+    $('badge-loc').textContent='Hầm B1 · Khu C · Cột C2';
+    $('badge-time').textContent='lưu lúc '+new Date(state.savedAt).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+(state.elapsed?' · trong '+state.elapsed.toFixed(1).replace('.',',')+' s':'');
+  }
+  show('scr-home');
+}
+
+function askEnd(){$('end-dialog').classList.add('show');}
+function hideEnd(){$('end-dialog').classList.remove('show');}
+function endSession(){
+  localStorage.removeItem('wdipqr');
+  state={savedAt:null, elapsed:null, startedAt:null};
+  qrFailUsed=false;
+  hideEnd(); show('scr-ended');
+}
+
+try{
+  const saved=JSON.parse(localStorage.getItem('wdipqr'));
+  if(saved&&saved.savedAt){state=saved; goHome();}
+}catch(e){}
+</script>
+
+</body>
+</html>

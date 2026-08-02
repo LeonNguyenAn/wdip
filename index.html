@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0a0f1e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Where Did I Park?</title>
+<style>
+  :root{
+    --bg0:#0a0f1e; --bg1:#101830;
+    --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.10);
+    --stroke:rgba(255,255,255,.12);
+    --text:#f4f7ff; --muted:#93a1c0;
+    --blue:#4f8ef7; --blue2:#7b6cff; --green:#34d59b; --red:#ff6b6b;
+    --grad:linear-gradient(135deg,#4f8ef7,#7b6cff);
+    --gradG:linear-gradient(135deg,#34d59b,#1fb98c);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:
+      radial-gradient(90vw 60vh at 85% -10%, rgba(123,108,255,.22), transparent 60%),
+      radial-gradient(80vw 50vh at -10% 100%, rgba(79,142,247,.18), transparent 60%),
+      linear-gradient(180deg,var(--bg0),var(--bg1));
+    background-attachment:fixed;
+    color:var(--text); display:flex; justify-content:center; min-height:100%;
+  }
+  .phone{width:100%; max-width:430px; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; position:relative}
+
+  .screen{
+    display:none; flex:1; flex-direction:column;
+    padding:max(20px, env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .screen.active{display:flex; animation:rise .35s cubic-bezier(.2,.8,.25,1)}
+  .screen > *{flex-shrink:0}
+  @keyframes rise{from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none}}
+
+  header{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+  header .back{
+    width:38px;height:38px;border-radius:12px;border:1px solid var(--stroke);
+    background:var(--glass); color:var(--text); font-size:1.3rem; cursor:pointer; flex:none;
+  }
+  header h1{font-size:1.22rem; font-weight:700; letter-spacing:.2px}
+  .sub{color:var(--muted); font-size:.85rem; margin-top:2px}
+
+  /* ===== HOME ===== */
+  .hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; text-align:center}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.05rem; letter-spacing:.4px; color:var(--muted)}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--grad)}
+  .hero h2{font-size:1.7rem; font-weight:800; letter-spacing:-.3px}
+  .hero p{color:var(--muted); font-size:.95rem; max-width:290px; line-height:1.5}
+
+  .bigwrap{position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center}
+  .ring{position:absolute; inset:0; border-radius:50%; border:2px dashed rgba(123,140,255,.35); animation:spin 22s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .pulse{position:absolute; inset:14px; border-radius:50%; background:radial-gradient(circle,rgba(79,142,247,.35),transparent 70%); animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(.92);opacity:.7} 50%{transform:scale(1.06);opacity:1}}
+  .bigbtn{
+    position:relative; width:176px;height:176px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--grad); color:#fff; font-family:inherit; font-size:1.16rem; font-weight:800;
+    box-shadow:0 18px 50px rgba(79,142,247,.5), inset 0 2px 10px rgba(255,255,255,.35);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    transition:transform .12s ease;
+  }
+  .bigbtn:active{transform:scale(.93)}
+  .bigbtn .icon{font-size:2.3rem; filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+
+  .ghostbtn{
+    width:100%; padding:16px; border-radius:18px; border:1px solid rgba(52,213,155,.5);
+    background:rgba(52,213,155,.08); color:var(--green); font-family:inherit;
+    font-size:1.05rem; font-weight:700; cursor:pointer;
+  }
+  .ghostbtn:disabled{opacity:.3}
+  .savedcard{
+    width:100%; background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
+    padding:14px 16px; display:flex; align-items:center; gap:12px; text-align:left;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  }
+  .savedcard .ok{width:38px;height:38px;border-radius:12px;background:var(--gradG);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
+  .savedcard b{font-size:.95rem}
+  .savedcard small{color:var(--muted)}
+
+  /* ===== SAVE ===== */
+  .steps{display:flex; align-items:center; gap:8px; margin:0 0 10px}
+  .step{flex:1; height:5px; border-radius:3px; background:var(--glass2); overflow:hidden; position:relative}
+  .step.on::after{content:''; position:absolute; inset:0; background:var(--grad); border-radius:3px; animation:fill .4s ease}
+  @keyframes fill{from{transform:scaleX(0)} to{transform:none}}
+
+  .timerpill{
+    margin-left:auto; flex:none;
+    background:rgba(79,142,247,.18); border:1px solid rgba(79,142,247,.55); color:#9cc0ff;
+    font-variant-numeric:tabular-nums; font-weight:800; font-size:.85rem;
+    padding:6px 12px; border-radius:999px;
+  }
+
+  .photo-row{display:flex; gap:10px; margin:8px 0 12px}
+  .photo-slot{
+    flex:1; height:118px; border-radius:16px; border:2px dashed rgba(147,161,192,.4);
+    background:var(--glass); display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    color:var(--muted); font-size:.82rem; cursor:pointer; overflow:hidden; position:relative; text-align:center;
+    transition:border-color .2s;
+  }
+  .photo-slot img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+  .photo-slot .lbl{
+    position:relative; z-index:1; width:100%; padding:10px 8px;
+    background:linear-gradient(transparent, rgba(6,10,20,.85)); font-weight:600;
+  }
+  .photo-slot .cam{position:absolute; top:34%; left:50%; transform:translate(-50%,-50%); font-size:1.5rem; opacity:.6}
+  .photo-slot.filled{border-style:solid; border-color:var(--green)}
+  .photo-slot.filled .cam{display:none}
+  .photo-slot .badge{
+    position:absolute; top:8px; right:8px; z-index:2; width:26px; height:26px; border-radius:50%;
+    background:var(--gradG); color:#fff; display:none; align-items:center; justify-content:center; font-size:.85rem; font-weight:800;
+  }
+  .photo-slot.filled .badge{display:flex; animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes pop{from{transform:scale(0)} to{transform:none}}
+  .photo-slot input{display:none}
+
+  .field{margin-bottom:10px}
+  .field label{display:block; font-size:.7rem; color:var(--muted); margin-bottom:5px; font-weight:700; text-transform:uppercase; letter-spacing:1px}
+  .chips{display:flex; flex-wrap:wrap; gap:7px}
+  .chip{
+    padding:8px 13px; border-radius:18px; border:1px solid var(--stroke); background:var(--glass);
+    color:var(--text); font-family:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
+    transition:transform .12s, background .15s, border-color .15s;
+  }
+  .chip:active{transform:scale(.94)}
+  .chip.on{background:var(--grad); border-color:transparent; font-weight:800; box-shadow:0 8px 20px rgba(79,142,247,.4)}
+
+  .primary{
+    width:100%; padding:14px; border-radius:16px; border:none; margin-top:8px;
+    background:var(--gradG); color:#04231a; font-family:inherit; font-size:1.08rem; font-weight:800; cursor:pointer;
+    box-shadow:0 14px 34px rgba(52,213,155,.35);
+    transition:transform .12s, opacity .2s;
+  }
+  .primary:active{transform:scale(.97)}
+  .primary:disabled{opacity:.28; box-shadow:none}
+
+  /* ===== CONFIRM ===== */
+  .confirm{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
+  .checkwrap{width:110px; height:110px}
+  .checkwrap svg{width:100%; height:100%}
+  .checkwrap .c{stroke:var(--green); stroke-width:5; fill:none; stroke-linecap:round;
+    stroke-dasharray:320; stroke-dashoffset:320; animation:draw .7s ease forwards}
+  .checkwrap .m{stroke:var(--green); stroke-width:7; fill:none; stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:80; stroke-dashoffset:80; animation:draw .5s ease .55s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .confirm h2{font-size:1.5rem; font-weight:800}
+  .confirm .time{
+    font-size:2.6rem; font-weight:900; font-variant-numeric:tabular-nums;
+    background:var(--gradG); -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:pop .45s cubic-bezier(.3,1.6,.5,1) .3s backwards;
+  }
+  .confirm p{color:var(--muted); font-size:.93rem; max-width:280px; line-height:1.5}
+
+  /* ===== FIND ===== */
+  .loc-card{
+    background:var(--grad); border-radius:20px; padding:14px 16px; margin-bottom:10px;
+    box-shadow:0 18px 44px rgba(79,142,247,.35); position:relative; overflow:hidden;
+  }
+  .loc-card::after{content:''; position:absolute; top:-40%; right:-20%; width:70%; height:180%;
+    background:radial-gradient(circle, rgba(255,255,255,.25), transparent 65%)}
+  .loc-card .big{font-size:1.7rem; font-weight:800; letter-spacing:-.3px; line-height:1.1}
+  .loc-card .big small{font-size:.78rem; font-weight:600; opacity:.85; display:block; margin-bottom:3px; letter-spacing:.8px; text-transform:uppercase}
+  .loc-card .row{display:flex; gap:7px; flex-wrap:wrap; margin-top:12px; position:relative; z-index:1}
+  .loc-chip{background:rgba(255,255,255,.18); padding:6px 11px; border-radius:11px; font-weight:600; font-size:.8rem; backdrop-filter:blur(4px)}
+  .duration{margin-top:12px; font-size:.78rem; color:rgba(255,255,255,.9); position:relative; z-index:1}
+
+  .photos-view{display:flex; gap:10px; margin-bottom:10px}
+  .photos-view figure{flex:1}
+  .photos-view img{width:100%; height:150px; object-fit:cover; border-radius:14px; cursor:zoom-in; border:1px solid var(--stroke)}
+  .photos-view figcaption{font-size:.74rem; color:var(--muted); text-align:center; margin-top:4px; font-weight:600}
+  .note-view{
+    background:var(--glass); border:1px solid var(--stroke); border-radius:14px; padding:10px 14px;
+    font-size:.87rem; line-height:1.45; margin-bottom:10px;
+  }
+  .note-view b{color:var(--green)}
+  .rowbtns{display:flex; gap:10px; margin-top:auto; padding-top:4px}
+  .editbtn{
+    flex:1; padding:13px 8px; border-radius:14px; border:1px solid var(--stroke);
+    background:var(--glass); color:var(--text); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer;
+  }
+  .endbtn{
+    flex:1.4; padding:13px 8px; border-radius:14px; border:1px solid rgba(255,107,107,.5);
+    background:rgba(255,107,107,.08); color:var(--red); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer;
+  }
+
+  /* ===== OVERLAYS ===== */
+  .zoom{position:fixed; inset:0; background:rgba(2,5,12,.95); display:none; align-items:center; justify-content:center; z-index:50; cursor:zoom-out}
+  .zoom.show{display:flex}
+  .zoom img{max-width:96vw; max-height:92vh; border-radius:10px}
+  .dialog-bg{position:fixed; inset:0; background:rgba(2,5,12,.7); display:none; align-items:flex-end; justify-content:center; z-index:40; padding:18px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px)}
+  .dialog-bg.show{display:flex}
+  .dialog{
+    background:#151d33; border:1px solid var(--stroke); border-radius:24px; padding:24px; width:100%; max-width:392px;
+    text-align:center; animation:rise .3s cubic-bezier(.2,.8,.25,1);
+    margin-bottom:env(safe-area-inset-bottom);
+  }
+  .dialog .emo{font-size:2.2rem; margin-bottom:8px}
+  .dialog h3{margin-bottom:8px; font-size:1.15rem}
+  .dialog p{color:var(--muted); font-size:.92rem; margin-bottom:18px; line-height:1.5}
+  .dialog .btns{display:flex; gap:10px}
+  .dialog button{flex:1; padding:14px; border-radius:14px; border:none; font-family:inherit; font-weight:800; cursor:pointer; font-size:.98rem}
+  .dialog .cancel{background:var(--glass2); color:var(--text)}
+  .dialog .ok-blue{background:var(--grad); color:#fff}
+  .dialog .ok-red{background:var(--red); color:#fff}
+
+  .warnbox{display:none; background:rgba(255,182,77,.12); border:1px solid rgba(255,182,77,.55);
+    color:#ffcf8a; border-radius:12px; padding:10px 14px; font-size:.85rem; margin-top:8px}
+  .warnbox.show{display:block; animation:rise .25s ease}
+  .field.missing .chips{outline:1.5px dashed rgba(255,182,77,.7); outline-offset:5px; border-radius:12px}
+  .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
+  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
+    display:flex;align-items:center;justify-content:center;font-size:2.6rem}
+  .ended h2{font-size:1.4rem;font-weight:800}
+  .ended p{color:var(--muted); font-size:.93rem; max-width:290px; line-height:1.5}
+  .errbox{background:rgba(255,107,107,.12); border:1px solid rgba(255,107,107,.5); color:#ffb3b3;
+    border-radius:14px; padding:12px 14px; font-size:.88rem; line-height:1.45; text-align:center}
+</style>
+</head>
+<body>
+
+
+<div class="phone">
+
+  <!-- HOME -->
+  <section class="screen active" id="scr-home">
+    <div class="hero">
+      <div class="brand"><span class="dot"></span>WHERE DID I PARK?</div>
+      <div>
+        <h2 id="home-title">Vừa đỗ xe xong?</h2>
+        <p id="home-sub">Lưu vị trí chỉ trong ít giây, khỏi lo quên chỗ đậu. Dữ liệu chỉ nằm trên máy bạn.</p>
+      </div>
+      <div class="bigwrap" id="bigwrap">
+        <div class="ring"></div><div class="pulse"></div>
+        <button class="bigbtn" id="btn-save" onclick="startSave()">
+          <span class="icon">📍</span>Lưu vị trí xe
+        </button>
+      </div>
+      <div class="savedcard" id="saved-badge" style="display:none">
+        <div class="ok">✓</div>
+        <div><b id="badge-loc"></b><br><small id="badge-time"></small></div>
+      </div>
+      <button class="ghostbtn" id="btn-find" onclick="goFind()" disabled>🔍 Tìm xe</button>
+    </div>
+  </section>
+
+  <!-- SAVE -->
+  <section class="screen" id="scr-save">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Lưu vị trí</h1><div class="sub">2 ảnh + 4 lựa chọn là xong</div></div>
+      <div class="timerpill" id="timer">0,0 s</div>
+    </header>
+    <div class="steps"><div class="step on"></div><div class="step" id="step2"></div></div>
+
+    <div class="photo-row">
+      <label class="photo-slot" id="slot1">
+        <input type="file" accept="image/*" capture="environment" onchange="setPhoto(this,1)">
+        <span class="cam">📷</span><span class="badge">✓</span>
+        <span class="lbl">Ảnh 1/2 — xe</span>
+      </label>
+      <label class="photo-slot" id="slot2">
+        <input type="file" accept="image/*" capture="environment" onchange="setPhoto(this,2)">
+        <span class="cam">🪧</span><span class="badge">✓</span>
+        <span class="lbl">Ảnh 2/2 — biển cột</span>
+      </label>
+    </div>
+
+    <div class="field"><label>Tầng / Khu vực</label>
+      <div class="chips" data-key="floor">
+        <button class="chip">Sân ngoài trời</button><button class="chip">Tầng thượng (T3)</button><button class="chip">Hầm B1</button>
+      </div>
+    </div>
+    <div class="field"><label>Khu</label>
+      <div class="chips" data-key="zone">
+        <button class="chip">A</button><button class="chip">B</button><button class="chip">C</button><button class="chip">D</button><button class="chip">E</button>
+      </div>
+    </div>
+    <div class="field"><label>Cột / Dãy gần nhất</label>
+      <div class="chips" data-key="pillar">
+        <button class="chip">1</button><button class="chip">2</button><button class="chip">3</button><button class="chip">4</button><button class="chip">5</button><button class="chip">6</button><button class="chip">7</button><button class="chip">8</button>
+      </div>
+    </div>
+    <div class="field"><label>Lối vào TTTM</label>
+      <div class="chips" data-key="entrance">
+        <button class="chip">Cổng 7 (D5)</button><button class="chip">Cổng 8 (17A)</button><button class="chip">Cổng 10 (Tên Lửa)</button><button class="chip">Thang máy bãi xe</button>
+      </div>
+    </div>
+
+    <div class="warnbox" id="warnbox">⚠️ Hãy chọn đủ Tầng, Khu và Cột trước khi lưu</div>
+    <button class="primary" id="btn-done" onclick="finishSave()">Xong ✓</button>
+  </section>
+
+  <!-- CONFIRM -->
+  <section class="screen" id="scr-confirm">
+    <div class="confirm">
+      <div class="checkwrap">
+        <svg viewBox="0 0 110 110">
+          <circle class="c" cx="55" cy="55" r="50"/>
+          <path class="m" d="M34 57 l14 14 l28 -30"/>
+        </svg>
+      </div>
+      <h2>Đã lưu vị trí xe!</h2>
+      <div class="time" id="confirm-time">—</div>
+      <p id="confirm-loc"></p>
+      <p>Cứ yên tâm mua sắm. Khi quay ra, bấm <b style="color:var(--green)">Tìm xe</b>.</p>
+      <button class="primary" style="max-width:280px" onclick="goHome()">Về màn hình chính</button>
+    </div>
+  </section>
+
+  <!-- FIND -->
+  <section class="screen" id="scr-find">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Xe của bạn ở đây</h1><div class="sub" id="find-when"></div></div>
+    </header>
+
+    <div class="loc-card">
+      <div class="big"><small id="find-floor"></small><span id="find-pillar"></span></div>
+      <div class="row" id="find-chips"></div>
+      <div class="duration" id="find-duration"></div>
+    </div>
+
+    <div class="photos-view" id="find-photos"></div>
+    <div class="note-view" id="find-note"></div>
+
+    <div class="rowbtns">
+      <button class="editbtn" onclick="editSave()">✏️ Sửa vị trí</button>
+      <button class="endbtn" onclick="askEnd()">Kết thúc phiên &amp; xóa</button>
+    </div>
+  </section>
+
+
+  <!-- ENDED -->
+  <section class="screen" id="scr-ended">
+    <div class="ended">
+      <div class="bin">🗑️</div>
+      <h2>Đã kết thúc phiên</h2>
+      <p>Toàn bộ dữ liệu vị trí xe đã được xóa khỏi máy của bạn.</p>
+      <button class="primary" style="max-width:280px" onclick="goHome()">Bắt đầu phiên mới</button>
+    </div>
+  </section>
+
+  <!-- overlays -->
+  <div class="zoom" id="zoom" onclick="this.classList.remove('show')"><img id="zoom-img" alt=""></div>
+
+  <div class="dialog-bg" id="nudge-dialog">
+    <div class="dialog">
+      <div class="emo">🪧</div>
+      <h3>Chưa có ảnh biển cột</h3>
+      <p>Ảnh biển khu/cột giúp tìm xe nhanh gấp đôi. Chụp thêm 1 tấm nhé?</p>
+      <div class="btns">
+        <button class="cancel" onclick="skipNudge()">Lưu luôn</button>
+        <button class="ok-blue" onclick="hideNudge()">Chụp thêm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-bg" id="end-dialog">
+    <div class="dialog">
+      <div class="emo">👋</div>
+      <h3>Đã tìm thấy xe?</h3>
+      <p>Chỉ kết thúc khi bạn đã đứng cạnh xe. Dữ liệu và ảnh sẽ được xóa khỏi máy.</p>
+      <div class="btns">
+        <button class="cancel" onclick="hideEnd()">Chưa thấy</button>
+        <button class="ok-red" onclick="endSession()">Đã thấy xe, kết thúc</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let state={photos:{}, sel:{}, startedAt:null, savedAt:null, elapsed:null};
+let timerInt=null, editing=false, nudged=false;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const sc=$(id); sc.classList.add('active'); sc.scrollTop=0;
+}
+
+function startSave(){
+  editing=false; nudged=false;
+  state={photos:{}, sel:{}, startedAt:Date.now(), savedAt:null, elapsed:null};
+  document.querySelectorAll('.photo-slot').forEach(s=>{s.classList.remove('filled'); s.querySelector('img')?.remove();});
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  $('warnbox').classList.remove('show');
+  document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
+  $('step2').classList.remove('on');
+  show('scr-save');
+  clearInterval(timerInt);
+  timerInt=setInterval(()=>{ $('timer').textContent=((Date.now()-state.startedAt)/1000).toFixed(1).replace('.',',')+' s'; },100);
+}
+
+function setPhoto(input,n){
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    state.photos[n]=e.target.result;
+    const slot=$('slot'+n);
+    slot.querySelector('img')?.remove();
+    const img=document.createElement('img'); img.src=e.target.result; slot.prepend(img);
+    slot.classList.add('filled');
+    if(state.photos[1]&&state.photos[2]) $('step2').classList.add('on');
+    validate();
+  };
+  r.readAsDataURL(f);
+}
+
+document.querySelectorAll('.chips').forEach(g=>{
+  g.addEventListener('click',e=>{
+    if(!e.target.classList.contains('chip')) return;
+    g.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    e.target.classList.add('on');
+    state.sel[g.dataset.key]=e.target.textContent;
+    validate();
+  });
+});
+
+function validate(){
+  const ok=state.sel.floor&&state.sel.zone&&state.sel.pillar;
+  if(ok){
+    $('warnbox').classList.remove('show');
+    document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
+  }
+  return ok;
+}
+function showMissing(){
+  $('warnbox').classList.add('show');
+  const keys={floor:0, zone:1, pillar:2};
+  document.querySelectorAll('.field').forEach((f,i)=>{
+    const g=f.querySelector('.chips');
+    if(!g) return;
+    const k=g.dataset.key;
+    f.classList.toggle('missing', (k in keys) && !state.sel[k]);
+  });
+  $('warnbox').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function locString(s){return `${s.floor} · Khu ${s.zone} · Cột ${s.zone}${s.pillar}`;}
+
+function persist(){
+  try{localStorage.setItem('wdip',JSON.stringify(state));}
+  catch(e){
+    try{ // anh qua lon: luu ban khong anh de khong mat thong tin chu
+      const lite={...state, photos:{}};
+      localStorage.setItem('wdip',JSON.stringify(lite));
+    }catch(e2){}
+  }
+}
+
+function finishSave(){
+  if(!(state.sel.floor&&state.sel.zone&&state.sel.pillar)){ showMissing(); return; }
+  if(!state.photos[2] && !nudged && !editing){
+    nudged=true;
+    $('nudge-dialog').classList.add('show');
+    return;
+  }
+  clearInterval(timerInt);
+  if(editing){
+    editing=false;
+    persist();
+    goFind();
+    return;
+  }
+  state.savedAt=Date.now();
+  state.elapsed=(state.savedAt-state.startedAt)/1000;
+  persist();
+  $('confirm-time').textContent='trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
+  $('confirm-loc').textContent=locString(state.sel)+(state.sel.entrance?' · vào từ '+state.sel.entrance:'');
+  show('scr-confirm');
+}
+
+function goHome(){
+  clearInterval(timerInt);
+  const has=!!state.savedAt;
+  $('btn-find').disabled=!has;
+  $('saved-badge').style.display=has?'flex':'none';
+  $('bigwrap').style.display=has?'none':'flex';
+  $('home-title').textContent=has?'Xe đã được ghi nhớ 👌':'Vừa đỗ xe xong?';
+  $('home-sub').textContent=has?'Cứ thong thả. Khi quay ra bãi xe, bấm Tìm xe.':'Lưu vị trí chỉ trong ít giây, khỏi lo quên chỗ đậu. Dữ liệu chỉ nằm trên máy bạn.';
+  if(has){
+    $('badge-loc').textContent=locString(state.sel);
+    $('badge-time').textContent='lưu lúc '+new Date(state.savedAt).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+(state.elapsed?' · trong '+state.elapsed.toFixed(1).replace('.',',')+' s':'');
+  }
+  show('scr-home');
+}
+
+function fmtDur(ms){
+  const m=Math.floor(ms/60000);
+  if(m<1) return 'vài giây';
+  return m<60? m+' phút' : Math.floor(m/60)+' giờ '+(m%60)+' phút';
+}
+
+function goFind(){
+  const s=state;
+  $('find-when').textContent='Lưu lúc '+new Date(s.savedAt).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+(s.elapsed?' · trong '+s.elapsed.toFixed(1).replace('.',',')+' s':'');
+  $('find-floor').textContent=s.sel.floor;
+  $('find-pillar').textContent='Cột '+s.sel.zone+s.sel.pillar;
+  const chips=[['Khu',s.sel.zone],['Lối vào',s.sel.entrance||'—']];
+  $('find-chips').innerHTML=chips.map(([k,v])=>`<div class="loc-chip">${k}: ${v}</div>`).join('');
+  $('find-duration').textContent='⏱ Xe đã đỗ được '+fmtDur(Date.now()-s.savedAt);
+  $('find-photos').innerHTML=[[1,'Ảnh xe'],[2,'Biển khu / cột']].map(([n,cap])=>
+    s.photos[n]?`<figure><img src="${s.photos[n]}" onclick="zoom(this.src)"><figcaption>${cap}</figcaption></figure>`:'' ).join('');
+  $('find-note').innerHTML=s.sel.entrance
+    ? `💡 Bạn đã vào TTTM từ <b>${s.sel.entrance}</b> — hãy quay lại đúng lối đó rồi đối chiếu ảnh biển cột.`
+    : `💡 Đối chiếu ảnh biển cột với các biển xung quanh để xác định hướng đi.`;
+  show('scr-find');
+}
+
+function zoom(src){$('zoom-img').src=src;$('zoom').classList.add('show');}
+function hideNudge(){$('nudge-dialog').classList.remove('show');}
+function skipNudge(){hideNudge();finishSave();}
+function askEnd(){$('end-dialog').classList.add('show');}
+function hideEnd(){$('end-dialog').classList.remove('show');}
+
+function editSave(){
+  editing=true; nudged=true;
+  clearInterval(timerInt);
+  $('timer').textContent='Sửa vị trí';
+  document.querySelectorAll('.photo-slot').forEach((s,i)=>{
+    const n=i+1;
+    s.querySelector('img')?.remove();
+    if(state.photos[n]){const img=document.createElement('img');img.src=state.photos[n];s.prepend(img);s.classList.add('filled');}
+    else s.classList.remove('filled');
+  });
+  document.querySelectorAll('.chips').forEach(g=>{
+    g.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on', c.textContent===state.sel[g.dataset.key]));
+  });
+  validate();
+  show('scr-save');
+}
+
+function endSession(){
+  localStorage.removeItem('wdip');
+  state={photos:{},sel:{},startedAt:null,savedAt:null,elapsed:null};
+  hideEnd(); show('scr-ended');
+}
+
+try{
+  const saved=JSON.parse(localStorage.getItem('wdip'));
+  if(saved&&saved.savedAt){state=saved; goHome();}
+}catch(e){}
+</script>
+
+</body>
+</html>
