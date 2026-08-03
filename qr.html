@@ -169,7 +169,7 @@
         <div class="ok">✓</div>
         <div><b id="badge-loc"></b><br><small id="badge-time"></small></div>
       </div>
-      <button class="ghostbtn" id="btn-find" onclick="startFind()" disabled>🔍 Tìm xe</button>
+      <button class="ghostbtn" id="btn-find" onclick="startFind()" style="display:none">🔍 Tìm xe</button>
     </div>
   </section>
 
@@ -345,7 +345,7 @@ function startFind(){ show('scr-findstart'); }
 
 function goHome(){
   const has=!!state.savedAt;
-  $('btn-find').disabled=!has;
+  $('btn-find').style.display=has?'':'none';
   $('saved-badge').style.display=has?'flex':'none';
   $('btn-save').style.display=has?'none':'flex';
   $('home-title').textContent=has?'Xe đã được ghi nhớ 👌':'Vừa đỗ xe xong?';

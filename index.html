@@ -131,6 +131,10 @@
   .chip:active{transform:scale(.94)}
   .chip.on{background:var(--grad); border-color:transparent; font-weight:800; box-shadow:0 8px 20px rgba(79,142,247,.4)}
 
+  .hint{display:none; color:#ffcf8a; font-size:.78rem; font-weight:700; margin-top:5px}
+  .field.missing .hint{display:block; animation:rise .25s ease}
+  .field.missing .chips{outline:1.5px dashed rgba(255,182,77,.7); outline-offset:5px; border-radius:12px}
+
   .primary{
     width:100%; padding:14px; border-radius:16px; border:none; margin-top:8px;
     background:var(--gradG); color:#04231a; font-family:inherit; font-size:1.08rem; font-weight:800; cursor:pointer;
@@ -138,24 +142,45 @@
     transition:transform .12s, opacity .2s;
   }
   .primary:active{transform:scale(.97)}
-  .primary:disabled{opacity:.28; box-shadow:none}
+  .primary.dim{background:var(--glass2); color:var(--muted); box-shadow:none}
+
+  .secondary{
+    width:100%; padding:13px; border-radius:14px; border:1px solid var(--stroke); margin-top:10px;
+    background:var(--glass); color:var(--text); font-family:inherit; font-size:.95rem; font-weight:700; cursor:pointer;
+  }
+
+  /* ===== PREVIEW ===== */
+  .preview{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center}
+  .preview h2{font-size:1.35rem; font-weight:800}
+  .preview img{width:100%; max-width:340px; max-height:52vh; object-fit:cover; border-radius:18px; border:1px solid var(--stroke)}
+  .preview .count{color:var(--muted); font-weight:700; font-size:.9rem}
+  .preview .btns{display:flex; gap:10px; width:100%; max-width:340px}
+  .preview .btns .editbtn{flex:1}
+  .preview .btns .primary{flex:1.3; margin-top:0}
 
   /* ===== CONFIRM ===== */
-  .confirm{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
-  .checkwrap{width:110px; height:110px}
+  .confirm{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center}
+  .checkwrap{width:96px; height:96px}
   .checkwrap svg{width:100%; height:100%}
   .checkwrap .c{stroke:var(--green); stroke-width:5; fill:none; stroke-linecap:round;
     stroke-dasharray:320; stroke-dashoffset:320; animation:draw .7s ease forwards}
   .checkwrap .m{stroke:var(--green); stroke-width:7; fill:none; stroke-linecap:round; stroke-linejoin:round;
     stroke-dasharray:80; stroke-dashoffset:80; animation:draw .5s ease .55s forwards}
   @keyframes draw{to{stroke-dashoffset:0}}
-  .confirm h2{font-size:1.5rem; font-weight:800}
+  .confirm h2{font-size:1.45rem; font-weight:800}
   .confirm .time{
-    font-size:2.6rem; font-weight:900; font-variant-numeric:tabular-nums;
+    font-size:1.15rem; font-weight:800; font-variant-numeric:tabular-nums;
     background:var(--gradG); -webkit-background-clip:text; background-clip:text; color:transparent;
-    animation:pop .45s cubic-bezier(.3,1.6,.5,1) .3s backwards;
   }
   .confirm p{color:var(--muted); font-size:.93rem; max-width:280px; line-height:1.5}
+  .infocard{
+    width:100%; max-width:340px; background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
+    padding:14px 16px; text-align:center;
+  }
+  .infocard b{font-size:1.05rem}
+  .infocard .ent{color:var(--muted); font-size:.88rem; margin-top:4px}
+  .thumbs{display:flex; gap:10px; width:100%; max-width:340px}
+  .thumbs img{flex:1; width:50%; height:120px; object-fit:cover; border-radius:14px; border:1px solid var(--stroke); cursor:zoom-in}
 
   /* ===== FIND ===== */
   .loc-card{
@@ -184,42 +209,27 @@
     flex:1; padding:13px 8px; border-radius:14px; border:1px solid var(--stroke);
     background:var(--glass); color:var(--text); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer;
   }
-  .endbtn{
-    flex:1.4; padding:13px 8px; border-radius:14px; border:1px solid rgba(255,107,107,.5);
-    background:rgba(255,107,107,.08); color:var(--red); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer;
+  .foundbtn{
+    flex:1.4; padding:13px 8px; border-radius:14px; border:none;
+    background:var(--gradG); color:#04231a; font-family:inherit; font-weight:800; font-size:.95rem; cursor:pointer;
+    box-shadow:0 12px 30px rgba(52,213,155,.35);
   }
+  .footnote{color:var(--muted); font-size:.75rem; text-align:center; margin-top:10px; line-height:1.4}
+
+  /* ===== FULLSCREEN STATES ===== */
+  .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
+  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
+    display:flex;align-items:center;justify-content:center;font-size:2.6rem}
+  .ended .bin.good{border-color:rgba(52,213,155,.6)}
+  .ended h2{font-size:1.4rem;font-weight:800}
+  .ended p{color:var(--muted); font-size:.93rem; max-width:290px; line-height:1.5}
+  .ended .kicker{color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase}
+  .ended .primary,.ended .secondary{max-width:280px}
 
   /* ===== OVERLAYS ===== */
   .zoom{position:fixed; inset:0; background:rgba(2,5,12,.95); display:none; align-items:center; justify-content:center; z-index:50; cursor:zoom-out}
   .zoom.show{display:flex}
   .zoom img{max-width:96vw; max-height:92vh; border-radius:10px}
-  .dialog-bg{position:fixed; inset:0; background:rgba(2,5,12,.7); display:none; align-items:flex-end; justify-content:center; z-index:40; padding:18px; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px)}
-  .dialog-bg.show{display:flex}
-  .dialog{
-    background:#151d33; border:1px solid var(--stroke); border-radius:24px; padding:24px; width:100%; max-width:392px;
-    text-align:center; animation:rise .3s cubic-bezier(.2,.8,.25,1);
-    margin-bottom:env(safe-area-inset-bottom);
-  }
-  .dialog .emo{font-size:2.2rem; margin-bottom:8px}
-  .dialog h3{margin-bottom:8px; font-size:1.15rem}
-  .dialog p{color:var(--muted); font-size:.92rem; margin-bottom:18px; line-height:1.5}
-  .dialog .btns{display:flex; gap:10px}
-  .dialog button{flex:1; padding:14px; border-radius:14px; border:none; font-family:inherit; font-weight:800; cursor:pointer; font-size:.98rem}
-  .dialog .cancel{background:var(--glass2); color:var(--text)}
-  .dialog .ok-blue{background:var(--grad); color:#fff}
-  .dialog .ok-red{background:var(--red); color:#fff}
-
-  .warnbox{display:none; background:rgba(255,182,77,.12); border:1px solid rgba(255,182,77,.55);
-    color:#ffcf8a; border-radius:12px; padding:10px 14px; font-size:.85rem; margin-top:8px}
-  .warnbox.show{display:block; animation:rise .25s ease}
-  .field.missing .chips{outline:1.5px dashed rgba(255,182,77,.7); outline-offset:5px; border-radius:12px}
-  .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
-  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
-    display:flex;align-items:center;justify-content:center;font-size:2.6rem}
-  .ended h2{font-size:1.4rem;font-weight:800}
-  .ended p{color:var(--muted); font-size:.93rem; max-width:290px; line-height:1.5}
-  .errbox{background:rgba(255,107,107,.12); border:1px solid rgba(255,107,107,.5); color:#ffb3b3;
-    border-radius:14px; padding:12px 14px; font-size:.88rem; line-height:1.45; text-align:center}
 </style>
 </head>
 <body>
@@ -245,7 +255,7 @@
         <div class="ok">✓</div>
         <div><b id="badge-loc"></b><br><small id="badge-time"></small></div>
       </div>
-      <button class="ghostbtn" id="btn-find" onclick="goFind()" disabled>🔍 Tìm xe</button>
+      <button class="ghostbtn" id="btn-find" onclick="goFind()" style="display:none">🔍 Tìm xe</button>
     </div>
   </section>
 
@@ -275,28 +285,56 @@
       <div class="chips" data-key="floor">
         <button class="chip">Sân ngoài trời</button><button class="chip">Tầng thượng (T3)</button><button class="chip">Hầm B1</button>
       </div>
+      <div class="hint">Chọn Tầng</div>
     </div>
     <div class="field"><label>Khu</label>
       <div class="chips" data-key="zone">
         <button class="chip">A</button><button class="chip">B</button><button class="chip">C</button><button class="chip">D</button><button class="chip">E</button>
       </div>
+      <div class="hint">Chọn Khu</div>
     </div>
     <div class="field"><label>Cột / Dãy gần nhất</label>
       <div class="chips" data-key="pillar">
         <button class="chip">1</button><button class="chip">2</button><button class="chip">3</button><button class="chip">4</button><button class="chip">5</button><button class="chip">6</button><button class="chip">7</button><button class="chip">8</button>
       </div>
+      <div class="hint">Chọn Cột</div>
     </div>
     <div class="field"><label>Lối vào TTTM</label>
       <div class="chips" data-key="entrance">
         <button class="chip">Cổng 7 (D5)</button><button class="chip">Cổng 8 (17A)</button><button class="chip">Cổng 10 (Tên Lửa)</button><button class="chip">Thang máy bãi xe</button>
       </div>
+      <div class="hint">Chọn Lối vào</div>
     </div>
 
-    <div class="warnbox" id="warnbox">⚠️ Hãy chọn đủ Tầng, Khu và Cột trước khi lưu</div>
-    <button class="primary" id="btn-done" onclick="finishSave()">Xong ✓</button>
+    <button class="primary dim" id="btn-done" onclick="finishSave()">Chọn đủ 4 mục</button>
   </section>
 
-  <!-- CONFIRM -->
+  <!-- PHOTO PREVIEW -->
+  <section class="screen" id="scr-preview">
+    <div class="preview">
+      <h2 id="pv-title">Ảnh xe</h2>
+      <img id="pv-img" alt="">
+      <div class="count" id="pv-count">1 / 2</div>
+      <div class="btns">
+        <button class="editbtn" onclick="retakePhoto()">Chụp lại</button>
+        <button class="primary" onclick="acceptPhoto()">Dùng ảnh</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECK: thieu anh -->
+  <section class="screen" id="scr-check">
+    <div class="ended">
+      <div class="kicker">Kiểm tra thông tin</div>
+      <div class="bin">⚠️</div>
+      <h2 id="chk-title">Thiếu ảnh biển cột</h2>
+      <p>Chụp đủ ảnh xe và biển cột để lưu vị trí chính xác.</p>
+      <button class="primary" id="chk-btn" onclick="checkShoot()">Chụp biển cột</button>
+      <button class="secondary" onclick="show('scr-save')">Quay lại</button>
+    </div>
+  </section>
+
+  <!-- CONFIRM: da luu -->
   <section class="screen" id="scr-confirm">
     <div class="confirm">
       <div class="checkwrap">
@@ -305,11 +343,15 @@
           <path class="m" d="M34 57 l14 14 l28 -30"/>
         </svg>
       </div>
-      <h2>Đã lưu vị trí xe!</h2>
-      <div class="time" id="confirm-time">—</div>
-      <p id="confirm-loc"></p>
-      <p>Cứ yên tâm mua sắm. Khi quay ra, bấm <b style="color:var(--green)">Tìm xe</b>.</p>
-      <button class="primary" style="max-width:280px" onclick="goHome()">Về màn hình chính</button>
+      <h2>Đã lưu vị trí xe</h2>
+      <div class="time" id="confirm-time"></div>
+      <div class="infocard">
+        <b id="confirm-loc"></b>
+        <div class="ent" id="confirm-ent"></div>
+      </div>
+      <div class="thumbs" id="confirm-photos"></div>
+      <button class="primary" style="max-width:340px" onclick="goFind()">Tìm xe</button>
+      <button class="secondary" style="max-width:340px" onclick="goHome()">Về màn hình chính</button>
     </div>
   </section>
 
@@ -331,53 +373,41 @@
 
     <div class="rowbtns">
       <button class="editbtn" onclick="editSave()">✏️ Sửa vị trí</button>
-      <button class="endbtn" onclick="askEnd()">Kết thúc phiên &amp; xóa</button>
+      <button class="foundbtn" onclick="askEnd()">✓ Đã tìm thấy xe</button>
     </div>
+    <button class="secondary" onclick="stayFind()">Chưa, tiếp tục xem vị trí</button>
+    <div class="footnote">Bấm "Đã tìm thấy xe" để kết thúc phiên và xóa dữ liệu</div>
   </section>
 
+  <!-- END CONFIRM -->
+  <section class="screen" id="scr-endconfirm">
+    <div class="ended">
+      <div class="bin">🗑️</div>
+      <h2>Kết thúc phiên</h2>
+      <p><b style="color:var(--text)">Kết thúc phiên và xóa dữ liệu vị trí xe?</b><br>Thông tin đã lưu sẽ bị xóa khỏi thiết bị.</p>
+      <button class="primary" onclick="endSession()">Kết thúc</button>
+      <button class="secondary" onclick="goFind()">Chưa, quay lại</button>
+    </div>
+  </section>
 
   <!-- ENDED -->
   <section class="screen" id="scr-ended">
     <div class="ended">
-      <div class="bin">🗑️</div>
+      <div class="bin good" style="color:var(--green)">✓</div>
       <h2>Đã kết thúc phiên</h2>
-      <p>Toàn bộ dữ liệu vị trí xe đã được xóa khỏi máy của bạn.</p>
-      <button class="primary" style="max-width:280px" onclick="goHome()">Bắt đầu phiên mới</button>
+      <p>Dữ liệu vị trí xe đã được xóa.<br>Không còn ảnh hoặc thông tin vị trí được lưu.</p>
+      <button class="primary" onclick="goHome()">Về màn hình chính</button>
     </div>
   </section>
 
   <!-- overlays -->
   <div class="zoom" id="zoom" onclick="this.classList.remove('show')"><img id="zoom-img" alt=""></div>
-
-  <div class="dialog-bg" id="nudge-dialog">
-    <div class="dialog">
-      <div class="emo">🪧</div>
-      <h3>Chưa có ảnh biển cột</h3>
-      <p>Ảnh biển khu/cột giúp tìm xe nhanh gấp đôi. Chụp thêm 1 tấm nhé?</p>
-      <div class="btns">
-        <button class="cancel" onclick="skipNudge()">Lưu luôn</button>
-        <button class="ok-blue" onclick="hideNudge()">Chụp thêm</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="dialog-bg" id="end-dialog">
-    <div class="dialog">
-      <div class="emo">👋</div>
-      <h3>Đã tìm thấy xe?</h3>
-      <p>Chỉ kết thúc khi bạn đã đứng cạnh xe. Dữ liệu và ảnh sẽ được xóa khỏi máy.</p>
-      <div class="btns">
-        <button class="cancel" onclick="hideEnd()">Chưa thấy</button>
-        <button class="ok-red" onclick="endSession()">Đã thấy xe, kết thúc</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
 let state={photos:{}, sel:{}, startedAt:null, savedAt:null, elapsed:null};
-let timerInt=null, editing=false, nudged=false;
+let timerInt=null, editing=false, pending=null;
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -385,61 +415,77 @@ function show(id){
 }
 
 function startSave(){
-  editing=false; nudged=false;
+  editing=false; pending=null;
   state={photos:{}, sel:{}, startedAt:Date.now(), savedAt:null, elapsed:null};
   document.querySelectorAll('.photo-slot').forEach(s=>{s.classList.remove('filled'); s.querySelector('img')?.remove();});
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  $('warnbox').classList.remove('show');
   document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
   $('step2').classList.remove('on');
+  refreshDone();
   show('scr-save');
   clearInterval(timerInt);
   timerInt=setInterval(()=>{ $('timer').textContent=((Date.now()-state.startedAt)/1000).toFixed(1).replace('.',',')+' s'; },100);
 }
 
+/* --- chup anh: chup -> xem lai -> Dung anh --- */
 function setPhoto(input,n){
   const f=input.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload=e=>{
-    state.photos[n]=e.target.result;
-    const slot=$('slot'+n);
-    slot.querySelector('img')?.remove();
-    const img=document.createElement('img'); img.src=e.target.result; slot.prepend(img);
-    slot.classList.add('filled');
-    if(state.photos[1]&&state.photos[2]) $('step2').classList.add('on');
-    validate();
-  };
+  r.onload=e=>{ openPreview(n, e.target.result); input.value=''; };
   r.readAsDataURL(f);
 }
+function openPreview(n,src){
+  pending={n,src};
+  $('pv-title').textContent = n===1 ? 'Ảnh xe' : 'Ảnh biển cột';
+  $('pv-count').textContent = n+' / 2';
+  $('pv-img').src=src;
+  show('scr-preview');
+}
+function retakePhoto(){
+  const n=pending.n; pending=null;
+  show('scr-save');
+  triggerShot(n);
+}
+function acceptPhoto(){
+  const {n,src}=pending; pending=null;
+  commitPhoto(n,src);
+  show('scr-save');
+}
+function commitPhoto(n,src){
+  state.photos[n]=src;
+  const slot=$('slot'+n);
+  slot.querySelector('img')?.remove();
+  const img=document.createElement('img'); img.src=src; slot.prepend(img);
+  slot.classList.add('filled');
+  if(state.photos[1]&&state.photos[2]) $('step2').classList.add('on');
+}
+function triggerShot(n){ $('slot'+n).querySelector('input').click(); }
 
+/* --- chon chip --- */
 document.querySelectorAll('.chips').forEach(g=>{
   g.addEventListener('click',e=>{
     if(!e.target.classList.contains('chip')) return;
     g.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
     e.target.classList.add('on');
     state.sel[g.dataset.key]=e.target.textContent;
-    validate();
+    g.closest('.field').classList.remove('missing');
+    refreshDone();
   });
 });
 
-function validate(){
-  const ok=state.sel.floor&&state.sel.zone&&state.sel.pillar;
-  if(ok){
-    $('warnbox').classList.remove('show');
-    document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
-  }
-  return ok;
+function selComplete(){ return state.sel.floor&&state.sel.zone&&state.sel.pillar&&state.sel.entrance; }
+function refreshDone(){
+  const ok=selComplete();
+  $('btn-done').textContent= ok ? 'Xong ✓' : 'Chọn đủ 4 mục';
+  $('btn-done').classList.toggle('dim', !ok);
 }
 function showMissing(){
-  $('warnbox').classList.add('show');
-  const keys={floor:0, zone:1, pillar:2};
-  document.querySelectorAll('.field').forEach((f,i)=>{
-    const g=f.querySelector('.chips');
-    if(!g) return;
-    const k=g.dataset.key;
-    f.classList.toggle('missing', (k in keys) && !state.sel[k]);
+  document.querySelectorAll('.field').forEach(f=>{
+    const k=f.querySelector('.chips')?.dataset.key;
+    if(k) f.classList.toggle('missing', !state.sel[k]);
   });
-  $('warnbox').scrollIntoView({behavior:'smooth', block:'nearest'});
+  const first=document.querySelector('.field.missing');
+  first?.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function locString(s){return `${s.floor} · Khu ${s.zone} · Cột ${s.zone}${s.pillar}`;}
@@ -455,12 +501,8 @@ function persist(){
 }
 
 function finishSave(){
-  if(!(state.sel.floor&&state.sel.zone&&state.sel.pillar)){ showMissing(); return; }
-  if(!state.photos[2] && !nudged && !editing){
-    nudged=true;
-    $('nudge-dialog').classList.add('show');
-    return;
-  }
+  if(!selComplete()){ showMissing(); return; }
+  if(!state.photos[1] || !state.photos[2]){ openCheck(); return; }
   clearInterval(timerInt);
   if(editing){
     editing=false;
@@ -471,15 +513,31 @@ function finishSave(){
   state.savedAt=Date.now();
   state.elapsed=(state.savedAt-state.startedAt)/1000;
   persist();
-  $('confirm-time').textContent='trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
-  $('confirm-loc').textContent=locString(state.sel)+(state.sel.entrance?' · vào từ '+state.sel.entrance:'');
+  $('confirm-time').textContent='Đã lưu trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
+  $('confirm-loc').textContent=locString(state.sel);
+  $('confirm-ent').textContent='📍 Vào từ '+state.sel.entrance;
+  $('confirm-photos').innerHTML=[1,2].map(n=>
+    state.photos[n]?`<img src="${state.photos[n]}" onclick="zoom(this.src)">`:'' ).join('');
   show('scr-confirm');
+}
+
+/* --- man kiem tra thieu anh (bat buoc du 2 anh) --- */
+function openCheck(){
+  const m1=!state.photos[1], m2=!state.photos[2];
+  $('chk-title').textContent = m1&&m2 ? 'Thiếu ảnh xe và biển cột' : (m2 ? 'Thiếu ảnh biển cột' : 'Thiếu ảnh xe');
+  $('chk-btn').textContent   = m1&&m2 ? 'Chụp ảnh còn thiếu'       : (m2 ? 'Chụp biển cột'       : 'Chụp ảnh xe');
+  show('scr-check');
+}
+function checkShoot(){
+  const n = !state.photos[1] ? 1 : 2;
+  show('scr-save');
+  triggerShot(n);
 }
 
 function goHome(){
   clearInterval(timerInt);
   const has=!!state.savedAt;
-  $('btn-find').disabled=!has;
+  $('btn-find').style.display=has?'':'none';
   $('saved-badge').style.display=has?'flex':'none';
   $('bigwrap').style.display=has?'none':'flex';
   $('home-title').textContent=has?'Xe đã được ghi nhớ 👌':'Vừa đỗ xe xong?';
@@ -512,15 +570,13 @@ function goFind(){
     : `💡 Đối chiếu ảnh biển cột với các biển xung quanh để xác định hướng đi.`;
   show('scr-find');
 }
+function stayFind(){ $('scr-find').scrollTop=0; }
 
 function zoom(src){$('zoom-img').src=src;$('zoom').classList.add('show');}
-function hideNudge(){$('nudge-dialog').classList.remove('show');}
-function skipNudge(){hideNudge();finishSave();}
-function askEnd(){$('end-dialog').classList.add('show');}
-function hideEnd(){$('end-dialog').classList.remove('show');}
+function askEnd(){ show('scr-endconfirm'); }
 
 function editSave(){
-  editing=true; nudged=true;
+  editing=true;
   clearInterval(timerInt);
   $('timer').textContent='Sửa vị trí';
   document.querySelectorAll('.photo-slot').forEach((s,i)=>{
@@ -532,14 +588,15 @@ function editSave(){
   document.querySelectorAll('.chips').forEach(g=>{
     g.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on', c.textContent===state.sel[g.dataset.key]));
   });
-  validate();
+  document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
+  refreshDone();
   show('scr-save');
 }
 
 function endSession(){
   localStorage.removeItem('wdip');
   state={photos:{},sel:{},startedAt:null,savedAt:null,elapsed:null};
-  hideEnd(); show('scr-ended');
+  show('scr-ended');
 }
 
 try{
