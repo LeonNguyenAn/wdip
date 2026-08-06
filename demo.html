@@ -3,144 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#fdfcff">
+<meta name="theme-color" content="#f2f4f8">
 <title>Where Did I Park? — Demo</title>
 <style>
   :root{
-    --bg0:#fdfcff; --bg1:#f3eefe;
-    --glass:#ffffff; --glass2:#f1ecfb;
-    --stroke:rgba(45,28,90,.12);
-    --text:#241743; --muted:#7a6f99;
-    --blue:#0891b2; --blue2:#5b8cff; --green:#0d9464; --red:#e8355f; --amber:#d97706;
-    --grad:linear-gradient(135deg,#ff7a59,#ff4d9d);
-    --gradG:linear-gradient(135deg,#22d3ee,#3ee08f);
+    --navy:#1e3a8a; --navy-d:#172f6f; --navy-soft:#e9eefb;
+    --bg:#f2f4f8; --card:#ffffff; --stroke:#e2e6ee;
+    --text:#28303f; --muted:#6b7590;
+    --yellow:#f7b500; --red:#e11d48; --red-soft:#fdecf0;
+    --green:#149e60;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
     font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:
-      radial-gradient(90vw 60vh at 85% -10%, rgba(255,77,157,.12), transparent 60%),
-      radial-gradient(80vw 50vh at -10% 100%, rgba(34,211,238,.12), transparent 60%),
-      linear-gradient(180deg,var(--bg0),var(--bg1));
-    background-attachment:fixed;
+    background:var(--bg);
     color:var(--text); display:flex; justify-content:center; min-height:100%;
   }
   .phone{width:100%; max-width:430px; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; position:relative}
 
   .screen{
     display:none; flex:1; flex-direction:column;
-    padding:max(20px, env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));
+    padding:max(18px, env(safe-area-inset-top)) 18px calc(104px + env(safe-area-inset-bottom));
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   .screen.active{display:flex; animation:rise .35s cubic-bezier(.2,.8,.25,1)}
   .screen > *{flex-shrink:0}
   @keyframes rise{from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none}}
 
-  header{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+  header{position:relative; display:flex; align-items:center; justify-content:center; text-align:center; min-height:44px; margin-bottom:14px}
   header .back{
-    width:38px;height:38px;border-radius:12px;border:1px solid var(--stroke);
-    background:var(--glass); color:var(--text); font-size:1.3rem; cursor:pointer; flex:none;
+    position:absolute; left:-6px; width:42px; height:42px; border:none; background:none;
+    color:var(--navy); font-size:1.8rem; font-weight:700; cursor:pointer; line-height:1;
   }
-  header h1{font-size:1.2rem; font-weight:700; letter-spacing:.2px}
-  .sub{color:var(--muted); font-size:.85rem; margin-top:2px}
+  header h1{font-size:1.25rem; font-weight:800; color:var(--navy); letter-spacing:.2px}
+  header .menu-dots{position:absolute; right:2px; color:var(--navy); font-size:1.5rem; font-weight:800}
+  .sub{color:var(--muted); font-size:.85rem; margin-top:2px; font-weight:500}
 
   /* ===== HOME ===== */
-  .hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; text-align:center}
-  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.05rem; letter-spacing:.4px; color:var(--muted)}
-  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--grad)}
-  .hero h2{font-size:1.7rem; font-weight:800; letter-spacing:-.3px}
-  .hero p{color:var(--muted); font-size:.95rem; max-width:300px; line-height:1.5}
+  .appbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px}
+  .appbar .iconbtn{width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:var(--navy)}
+  .appbar .iconbtn svg{width:26px; height:26px}
+  .apptitle{font-size:1.45rem; font-weight:800; color:var(--navy)}
+  .homemapbox{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#eef1f6; margin-bottom:14px}
+  .homemapbox svg{display:block; width:100%; height:auto}
 
-  .bigwrap{position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center}
-  .ring{position:absolute; inset:0; border-radius:50%; border:2px dashed rgba(255,122,89,.45); animation:spin 22s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .pulse{position:absolute; inset:14px; border-radius:50%; background:radial-gradient(circle,rgba(255,77,157,.4),transparent 70%); animation:pulse 2.4s ease-in-out infinite}
-  @keyframes pulse{0%,100%{transform:scale(.92);opacity:.7} 50%{transform:scale(1.06);opacity:1}}
-  .bigbtn{
-    position:relative; width:176px;height:176px;border-radius:50%;border:none;cursor:pointer;
-    background:var(--grad); color:#fff; font-family:inherit; font-size:1.16rem; font-weight:800;
-    box-shadow:0 18px 50px rgba(255,77,157,.5), inset 0 2px 10px rgba(255,255,255,.35);
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-    transition:transform .12s ease;
+  .statuscard{
+    background:var(--card); border:1px solid var(--stroke); border-radius:20px;
+    box-shadow:0 10px 28px rgba(30,58,138,.08);
+    padding:16px 18px; display:flex; align-items:center; gap:14px; margin-bottom:16px;
   }
-  .bigbtn:active{transform:scale(.93)}
-  .bigbtn .icon{font-size:2.3rem; filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+  .statustext{flex:1; display:flex; flex-direction:column; gap:3px; text-align:left}
+  .statustext small{color:var(--muted); font-size:.84rem; font-weight:600}
+  .statustext b{font-size:1.35rem; font-weight:800}
+  .statustext .loc{color:var(--navy); font-weight:700; font-size:.94rem}
+  .caricon{
+    width:62px; height:62px; border-radius:50%; background:#e8ebf3; flex:none;
+    display:flex; align-items:center; justify-content:center; font-size:1.85rem;
+  }
+  .statuscard.saved .caricon{background:var(--yellow); box-shadow:0 6px 16px rgba(247,181,0,.45)}
 
-  .ghostbtn{
-    width:100%; padding:16px; border-radius:18px; border:1px solid rgba(16,185,129,.45);
-    background:rgba(16,185,129,.08); color:#0d9464; font-family:inherit;
-    font-size:1.05rem; font-weight:700; cursor:pointer;
+  .outlinebtn,.solidbtn{
+    width:100%; border-radius:22px; font-family:inherit; font-weight:800; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:10px; transition:transform .12s ease;
   }
-  .savedcard{
-    width:100%; background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
-    padding:14px 16px; display:flex; align-items:center; gap:12px; text-align:left;
-    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  }
-  .savedcard .ok{width:38px;height:38px;border-radius:12px;color:#fff;background:var(--gradG);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
-  .savedcard b{font-size:.95rem}
-  .savedcard small{color:var(--muted)}
+  .outlinebtn:active,.solidbtn:active{transform:scale(.97)}
+  .outlinebtn{background:var(--card); border:2px solid var(--navy); color:var(--navy)}
+  .solidbtn{background:var(--navy); border:none; color:#fff; box-shadow:0 14px 30px rgba(30,58,138,.28)}
+  .tall{flex-direction:column; gap:8px; padding:24px 16px; font-size:1.3rem; margin-bottom:14px}
+  .tall svg{width:34px; height:34px}
 
-  /* ===== CHECK HUB (Kiem tra thong tin) ===== */
+  /* ===== CHECK HUB (Luu cho do) ===== */
   .timerpill{
-    margin-left:auto; flex:none;
-    background:rgba(34,211,238,.12); border:1px solid rgba(8,145,178,.4); color:#0891b2;
+    position:absolute; right:0; top:50%; transform:translateY(-50%);
+    background:#fff; border:1.5px solid var(--navy); color:var(--navy);
     font-variant-numeric:tabular-nums; font-weight:800; font-size:.85rem;
     padding:6px 12px; border-radius:999px;
   }
   .photo-row{display:flex; gap:10px; margin:4px 0 12px}
   .photo-slot{
-    flex:1; height:128px; border-radius:16px; border:2px dashed rgba(147,161,192,.4);
-    background:var(--glass); display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    flex:1; height:128px; border-radius:16px; border:2px dashed rgba(30,58,138,.35);
+    background:var(--card); display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
     color:var(--muted); font-size:.82rem; cursor:pointer; overflow:hidden; position:relative; text-align:center;
     transition:border-color .2s;
   }
   .photo-slot img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
   .photo-slot .lbl{
     position:relative; z-index:1; width:100%; padding:10px 8px;
-    background:linear-gradient(transparent, rgba(20,10,40,.75)); font-weight:600; color:#fff;
+    background:linear-gradient(transparent, rgba(15,23,42,.78)); font-weight:600; color:#fff;
   }
   .photo-slot .cam{position:absolute; top:34%; left:50%; transform:translate(-50%,-50%); font-size:1.5rem; opacity:.6}
-  .photo-slot.filled{border-style:solid; border-color:var(--green)}
+  .photo-slot.filled{border-style:solid; border-color:var(--navy)}
   .photo-slot.filled .cam{display:none}
   .photo-slot .badge{
     position:absolute; top:8px; right:8px; z-index:2; width:26px; height:26px; border-radius:50%;
-    background:var(--gradG); color:#fff; display:none; align-items:center; justify-content:center; font-size:.85rem; font-weight:800;
+    background:var(--green); color:#fff; display:none; align-items:center; justify-content:center; font-size:.85rem; font-weight:800;
   }
   .photo-slot.filled .badge{display:flex; animation:pop .3s cubic-bezier(.3,1.6,.5,1)}
   @keyframes pop{from{transform:scale(0)} to{transform:none}}
   .photo-slot input{display:none}
 
   .gpscard{
-    background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
+    background:var(--card); border:1px solid var(--stroke); border-radius:18px;
     padding:12px; margin-bottom:12px; text-align:center;
   }
-  .gpscard .mapbox{border-radius:12px; overflow:hidden; background:#f7f4ff; border:1px solid var(--stroke)}
+  .gpscard .mapbox{border-radius:12px; overflow:hidden; background:#eef1f6; border:1px solid var(--stroke)}
   .gpscard .mapbox svg{display:block; width:100%; height:auto}
   .gpstag{
     display:inline-flex; align-items:center; gap:8px; margin-top:10px;
-    background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.4); color:#0d9464;
+    background:#fff; border:1.5px solid var(--navy); color:var(--navy);
     font-weight:800; font-size:.88rem; padding:7px 14px; border-radius:999px;
   }
   .gpstag .sat{display:inline-block; animation:bob 2s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(1px)}50%{transform:translateY(-2px)}}
 
   .primary{
-    width:100%; padding:14px; border-radius:16px; border:none; margin-top:8px;
-    background:var(--gradG); color:#053b2b; font-family:inherit; font-size:1.05rem; font-weight:800; cursor:pointer;
-    box-shadow:0 14px 34px rgba(34,211,238,.35);
+    width:100%; padding:15px; border-radius:20px; border:none; margin-top:8px;
+    background:var(--navy); color:#fff; font-family:inherit; font-size:1.05rem; font-weight:800; cursor:pointer;
+    box-shadow:0 14px 30px rgba(30,58,138,.28);
     transition:transform .12s, opacity .2s;
   }
   .primary:active{transform:scale(.97)}
-  .primary.blue{background:linear-gradient(135deg,#22d3ee,#5b8cff); color:#0b2447; box-shadow:0 14px 34px rgba(34,211,238,.4)}
   .secondary{
-    width:100%; padding:13px; border-radius:14px; border:1px solid var(--stroke); margin-top:10px;
-    background:var(--glass); color:var(--text); font-family:inherit; font-size:.95rem; font-weight:700; cursor:pointer;
+    width:100%; padding:13px; border-radius:16px; border:1.5px solid var(--navy); margin-top:10px;
+    background:var(--card); color:var(--navy); font-family:inherit; font-size:.95rem; font-weight:700; cursor:pointer;
   }
 
   /* ===== PREVIEW ===== */
   .preview{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center}
-  .preview h2{font-size:1.35rem; font-weight:800}
+  .preview h2{font-size:1.35rem; font-weight:800; color:var(--navy)}
   .preview img{width:100%; max-width:340px; max-height:52vh; object-fit:cover; border-radius:18px; border:1px solid var(--stroke)}
   .preview .count{color:var(--muted); font-weight:700; font-size:.9rem}
   .preview .btns{display:flex; gap:10px; width:100%; max-width:340px}
@@ -149,19 +140,19 @@
 
   /* ===== ERROR / STATE SCREENS ===== */
   .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
-  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
+  .ended .bin{width:92px;height:92px;border-radius:50%;background:#fff;border:1px solid var(--stroke);
     display:flex;align-items:center;justify-content:center;font-size:2.6rem}
-  .ended .bin.good{border-color:rgba(62,224,143,.65)}
-  .ended .bin.warn{border-color:rgba(255,193,77,.65)}
+  .ended .bin.good{border-color:rgba(20,158,96,.6)}
+  .ended .bin.warn{border-color:rgba(247,181,0,.75)}
   .ended h2{font-size:1.4rem;font-weight:800}
   .ended p{color:var(--muted); font-size:.93rem; max-width:300px; line-height:1.5}
-  .ended .kicker{color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase}
+  .ended .kicker{color:var(--navy); font-size:.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase}
   .ended .primary,.ended .secondary{max-width:300px}
   .checklist{
-    background:#ffe9ef; border:1px solid rgba(232,53,95,.4); border-radius:14px;
+    background:var(--red-soft); border:1px solid rgba(225,29,72,.35); border-radius:14px;
     padding:12px 18px; text-align:left; font-size:.92rem; line-height:1.9;
   }
-  .checklist .miss{color:#d6336c; font-weight:700}
+  .checklist .miss{color:#be123c; font-weight:700}
 
   .checkwrap{width:96px; height:96px}
   .checkwrap svg{width:100%; height:100%}
@@ -172,53 +163,85 @@
   @keyframes draw{to{stroke-dashoffset:0}}
 
   /* ===== NAV MAP ===== */
-  .mapwrap{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#f7f4ff; position:relative}
+  .mapwrap{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#eef1f6; position:relative}
   .mapwrap svg{display:block; width:100%; height:auto}
   .distpill{
     position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
-    background:rgba(36,23,67,.9); border:1px solid rgba(255,255,255,.2); color:#fff;
-    font-weight:800; font-size:.88rem; padding:7px 16px; border-radius:999px; white-space:nowrap;
+    background:var(--navy); color:#fff; border:none;
+    font-weight:800; font-size:.88rem; padding:8px 16px; border-radius:999px; white-space:nowrap;
+    box-shadow:0 8px 20px rgba(30,58,138,.35);
   }
   .banner{
     position:absolute; left:12px; right:12px; top:12px; text-align:center;
-    border-radius:12px; padding:9px 10px; font-weight:800; font-size:.86rem; display:none;
+    border-radius:999px; padding:10px 12px; font-weight:800; font-size:.86rem; display:none;
   }
-  .banner.red{background:#ffe9ef; border:1px solid rgba(232,53,95,.5); color:#d6336c}
-  .banner.green{background:#e5f8ef; border:1px solid rgba(16,185,129,.5); color:#0d9464}
+  .banner.red{background:var(--red-soft); border:1.5px solid rgba(225,29,72,.45); color:#be123c}
+  .banner.green{background:var(--navy); border:none; color:#fff; box-shadow:0 8px 20px rgba(30,58,138,.35)}
   .banner.show{display:block; animation:rise .3s ease}
-  .spin{display:inline-block; width:14px; height:14px; border:2px solid rgba(214,51,108,.3); border-top-color:#d6336c;
+  .spin{display:inline-block; width:14px; height:14px; border:2px solid rgba(190,18,60,.3); border-top-color:#be123c;
     border-radius:50%; animation:spinner .8s linear infinite; vertical-align:-2px; margin-left:6px}
   @keyframes spinner{to{transform:rotate(360deg)}}
 
-  .voicebar{
-    display:flex; align-items:center; gap:10px; margin-top:10px;
-    background:var(--glass); border:1px solid var(--stroke); border-radius:14px; padding:10px 14px;
+  /* ===== BOTTOM SHEET (Tim Xe) ===== */
+  .sheet{
+    background:var(--card); border:1px solid var(--stroke); border-radius:24px;
+    padding:12px 16px 16px; margin-top:12px;
+    box-shadow:0 12px 30px rgba(30,58,138,.10);
   }
-  .voicebar .spk{
-    width:40px; height:40px; border-radius:12px; border:none; background:var(--grad); color:#fff;
-    font-size:1.15rem; cursor:pointer; flex:none;
+  .grab{width:52px; height:5px; border-radius:3px; background:#d5dae6; margin:0 auto 12px}
+  .sheethead{display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; text-align:left}
+  .sheethead > div:first-child{flex:1}
+  .sheethead h2{font-size:1.28rem; font-weight:800}
+  .cancelchip{
+    background:var(--red-soft); color:#be123c; border:1px solid rgba(225,29,72,.25);
+    border-radius:999px; padding:8px 14px; font-family:inherit; font-weight:800; font-size:.88rem; cursor:pointer; flex:none;
   }
-  .voicebar .txt{font-size:.92rem; font-weight:700}
-  .voicebar .eq{display:flex; gap:2px; margin-left:auto; align-items:flex-end; height:18px}
-  .voicebar .eq i{width:3px; background:var(--blue); border-radius:2px; animation:eq 0.9s ease-in-out infinite}
-  .voicebar .eq i:nth-child(1){height:8px} .voicebar .eq i:nth-child(2){height:16px; animation-delay:.15s}
-  .voicebar .eq i:nth-child(3){height:11px; animation-delay:.3s} .voicebar .eq i:nth-child(4){height:15px; animation-delay:.45s}
-  @keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
-
+  .inforow{display:flex; gap:10px; margin-bottom:12px}
+  .infocard{
+    flex:1; background:#f6f7fb; border:1px solid var(--stroke); border-radius:16px;
+    padding:12px; display:flex; flex-direction:column; gap:6px; text-align:left; min-width:0;
+  }
+  .infocard small{color:var(--muted); font-weight:600; font-size:.8rem}
+  .infocard b{font-size:1.02rem; font-weight:800}
+  .voiceline{display:flex; align-items:center; gap:8px}
+  .voiceline b{flex:1; font-size:.92rem}
+  .play{
+    width:38px; height:38px; border-radius:50%; border:none; background:var(--navy); color:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;
+  }
+  .play svg{width:15px; height:15px}
+  .photolabelwrap{position:relative; margin-bottom:12px}
+  .photolabelwrap .photos-mini{margin-top:0}
+  .photolabel{
+    position:absolute; top:8px; left:8px; z-index:2;
+    background:rgba(15,23,42,.72); color:#fff; font-size:.78rem; font-weight:700;
+    padding:5px 10px; border-radius:9px;
+  }
   .photos-mini{display:flex; gap:10px; margin-top:10px}
-  .photos-mini img{flex:1; width:50%; height:86px; object-fit:cover; border-radius:12px; border:1px solid var(--stroke); cursor:zoom-in}
+  .photos-mini img{flex:1; width:50%; height:100px; object-fit:cover; border-radius:14px; border:1px solid var(--stroke); cursor:zoom-in}
 
-  .rowbtns{display:flex; gap:10px; margin-top:12px}
   .editbtn{
-    flex:1; padding:13px 8px; border-radius:14px; border:1px solid var(--stroke);
-    background:var(--glass); color:var(--text); font-family:inherit; font-weight:700; font-size:.88rem; cursor:pointer;
+    flex:1; padding:13px 8px; border-radius:16px; border:1.5px solid var(--navy);
+    background:var(--card); color:var(--navy); font-family:inherit; font-weight:700; font-size:.88rem; cursor:pointer;
   }
-  .foundbtn{
-    flex:1.35; padding:13px 8px; border-radius:14px; border:none;
-    background:var(--gradG); color:#053b2b; font-family:inherit; font-weight:800; font-size:.93rem; cursor:pointer;
-    box-shadow:0 12px 30px rgba(62,224,143,.35);
+  .footnote{color:var(--muted); font-size:.75rem; text-align:center; margin-top:12px; line-height:1.4}
+
+  .trackhint{color:var(--muted); font-size:.85rem; text-align:center; margin:12px 6px}
+
+  /* ===== TAB BAR ===== */
+  .tabbar{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:430px; z-index:30;
+    background:#f8f9fc; border-top:1px solid var(--stroke);
+    display:flex; gap:8px; padding:10px 16px calc(12px + env(safe-area-inset-bottom));
   }
-  .footnote{color:var(--muted); font-size:.75rem; text-align:center; margin-top:10px; line-height:1.4}
+  .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:9px 6px; border:none; border-radius:20px; background:none;
+    color:#5b6478; font-family:inherit; font-weight:700; font-size:.8rem; cursor:pointer;
+  }
+  .tab svg{width:22px; height:22px}
+  .tab.active{background:var(--navy); color:#fff; box-shadow:0 8px 20px rgba(30,58,138,.3)}
 
   /* ===== OVERLAYS ===== */
   .zoom{position:fixed; inset:0; background:rgba(2,5,12,.95); display:none; align-items:center; justify-content:center; z-index:50; cursor:zoom-out}
@@ -233,31 +256,67 @@
 
   <!-- HOME -->
   <section class="screen active" id="scr-home">
-    <div class="hero">
-      <div class="brand"><span class="dot"></span>WHERE DID I PARK?</div>
-      <div>
-        <h2 id="home-title">Vừa đỗ xe xong?</h2>
-        <p id="home-sub">Chụp 2 ảnh, GPS tự lưu. Khi quay ra, bản đồ dẫn bạn về đúng chỗ xe, ra nhầm lối cũng không sao.</p>
-      </div>
-      <div class="bigwrap" id="bigwrap">
-        <div class="ring"></div><div class="pulse"></div>
-        <button class="bigbtn" id="btn-save" onclick="startSave()">
-          <span class="icon">📍</span>Lưu vị trí xe
-        </button>
-      </div>
-      <div class="savedcard" id="saved-badge" style="display:none">
-        <div class="ok">✓</div>
-        <div><b id="badge-loc"></b><br><small id="badge-time"></small></div>
-      </div>
-      <button class="ghostbtn" id="btn-find" onclick="goFind()" style="display:none">🔍 Tìm xe</button>
+    <div class="appbar">
+      <span class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+      <div class="apptitle">Where did I park?</div>
+      <span class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.8-3.4 4.6-5 8-5s6.2 1.6 8 5"/></svg></span>
     </div>
+
+    <div class="homemapbox"><div id="homemap"></div></div>
+
+    <div class="statuscard">
+      <div class="statustext">
+        <small>Trạng thái hiện tại</small>
+        <b id="home-title">Chưa Lưu Vị Trí</b>
+        <span class="loc" id="home-sub">Bấm "Dẫn Vào Chỗ Đậu" khi vừa đỗ xe xong</span>
+      </div>
+      <div class="caricon" id="car-ico">🅿️</div>
+    </div>
+
+    <button class="outlinebtn tall" id="btn-save" onclick="goTrack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7-5.6-7-11a7 7 0 1 1 14 0c0 5.4-7 11-7 11z"/><path d="M12 7v6M9 10h6" stroke-linecap="round"/></svg>
+      Dẫn Vào Chỗ Đậu
+    </button>
+    <button class="solidbtn tall" id="btn-find" onclick="goFind()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l7 18-7-5-7 5z"/></svg>
+      Tìm Xe
+    </button>
+  </section>
+
+  <!-- TRACK: Dan vao cho dau (Buoc 1) -->
+  <section class="screen" id="scr-track">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Dẫn Vào Chỗ Đậu</h1><div class="sub">Đang theo dõi GPS</div></div>
+      <div class="timerpill">🛰️ GPS tốt</div>
+    </header>
+    <div class="mapwrap">
+      <div id="trackmap"></div>
+      <div class="distpill">Đang theo dõi vị trí của bạn</div>
+    </div>
+    <div class="trackhint">Đậu xe xong? Bấm "Dừng Xe" để chụp ảnh và lưu chỗ đậu.</div>
+    <button class="primary" onclick="startSave()">🅿️ Dừng Xe</button>
+    <button class="secondary" onclick="goHome()">Hủy</button>
+  </section>
+
+  <!-- MAP VIEW: tab Ban do -->
+  <section class="screen" id="scr-mapview">
+    <header>
+      <div><h1>Bản đồ</h1><div class="sub">Vị trí xe của bạn</div></div>
+    </header>
+    <div class="mapwrap">
+      <div id="mapviewmap"></div>
+      <div class="distpill" id="mapview-pill">Vị trí xe</div>
+    </div>
+    <button class="primary" id="mapview-find" onclick="goFind()">Tìm Xe</button>
+    <button class="secondary" id="mapview-park" onclick="goTrack()">Dẫn Vào Chỗ Đậu</button>
   </section>
 
   <!-- CHECK HUB: Kiem tra thong tin -->
   <section class="screen" id="scr-check">
     <header>
-      <button class="back" onclick="goHome()">‹</button>
-      <div><h1>Kiểm tra thông tin</h1><div class="sub">2 ảnh + GPS tự lưu là xong</div></div>
+      <button class="back" onclick="goTrack()">‹</button>
+      <div><h1>Chụp ảnh chỗ đậu</h1><div class="sub">Chụp 2 ảnh làm dấu</div></div>
       <div class="timerpill" id="timer">0,0 s</div>
     </header>
 
@@ -274,10 +333,10 @@
 
     <div class="gpscard">
       <div class="mapbox" id="minimap"></div>
-      <div class="gpstag"><span class="sat">🛰️</span> GPS đã lưu</div>
+      <div class="gpstag"><span class="sat">🛰️</span> Tín hiệu GPS tốt — đã lưu</div>
     </div>
 
-    <button class="primary" id="btn-done" onclick="finishSave()">Lưu vị trí</button>
+    <button class="primary" id="btn-done" onclick="finishSave()">📍 Lưu Vị Trí &amp; GPS</button>
   </section>
 
   <!-- PHOTO PREVIEW -->
@@ -320,7 +379,7 @@
       <div class="gpstag" id="saved-tag">🛰️ GPS đã lưu</div>
     </div>
     <div class="photos-mini" id="saved-photos"></div>
-    <button class="primary blue" onclick="goFind()">Tìm xe</button>
+    <button class="primary" onclick="goFind()">Tìm Xe</button>
     <button class="secondary" onclick="goHome()">Về màn hình chính</button>
   </section>
 
@@ -328,28 +387,40 @@
   <section class="screen" id="scr-find">
     <header>
       <button class="back" onclick="goHome()">‹</button>
-      <div><h1>Dẫn đường tới xe</h1><div class="sub" id="find-when"></div></div>
+      <div><h1>Tìm Xe</h1></div>
+      <span class="menu-dots">⋮</span>
     </header>
 
     <div class="mapwrap" onclick="navTap()" style="cursor:pointer">
       <div id="navmap"></div>
-      <div class="banner red" id="banner-lost">⚠️ Đi nhầm lối - đang tạo đường mới<span class="spin"></span></div>
-      <div class="banner green" id="banner-ok">✓ Đã chuyển hướng</div>
+      <div class="banner red" id="banner-lost">⚠️ Đi nhầm hướng — vui lòng quay đầu<span class="spin"></span></div>
+      <div class="banner green" id="banner-ok">✓ Đã chuyển hướng — đi theo lộ trình mới</div>
       <div class="distpill" id="distpill">Còn khoảng 40 m</div>
     </div>
 
-    <div class="voicebar">
-      <button class="spk" onclick="speakGuide()">🔊</button>
-      <div class="txt" id="voice-txt">Đi thẳng 20 m, rẽ phải</div>
-      <div class="eq"><i></i><i></i><i></i><i></i></div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <div class="sheethead">
+        <div><h2>Đang đi bộ đến xe</h2><div class="sub" id="find-when"></div></div>
+        <button class="cancelchip" onclick="goHome()">✕ Hủy</button>
+      </div>
+      <div class="inforow">
+        <div class="infocard"><small>📍 Khu vực</small><b>Khu D — Cột D5</b></div>
+        <div class="infocard">
+          <small>🔊 Chỉ dẫn giọng nói</small>
+          <div class="voiceline">
+            <b id="voice-txt">Đi thẳng 20 m, rẽ phải</b>
+            <button class="play" onclick="speakGuide()" aria-label="Phát chỉ dẫn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="photolabelwrap">
+        <span class="photolabel">🖼 Ảnh chụp</span>
+        <div class="photos-mini" id="find-photos"></div>
+      </div>
+      <button class="primary" onclick="foundCar()">✓ Đã tìm thấy xe</button>
+      <div class="footnote">Chạm vào bản đồ để mô phỏng: đi nhầm hướng → quay đầu, chuyển hướng → tìm thấy xe</div>
     </div>
-
-    <div class="photos-mini" id="find-photos"></div>
-
-    <div class="rowbtns">
-      <button class="foundbtn" onclick="foundCar()">✓ Đã tìm thấy xe</button>
-    </div>
-    <div class="footnote">Chạm vào bản đồ để mô phỏng: đi nhầm lối → chuyển hướng → đã tìm thấy xe</div>
   </section>
 
   <!-- FOUND -->
@@ -389,6 +460,22 @@
     </div>
   </section>
 
+  <!-- TAB BAR -->
+  <nav class="tabbar">
+    <button class="tab active" id="tab-home" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+      <span>Trang chủ</span>
+    </button>
+    <button class="tab" id="tab-map" onclick="goMapView()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>
+      <span>Bản đồ</span>
+    </button>
+    <button class="tab" id="tab-save" onclick="goSpot()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.6-7-11a7 7 0 1 1 14 0c0 5.4-7 11-7 11z"/><path d="M12 7v6M9 10h6" stroke-linecap="round"/></svg>
+      <span>Lưu chỗ đỗ</span>
+    </button>
+  </nav>
+
   <!-- overlays -->
   <div class="zoom" id="zoom" onclick="this.classList.remove('show')"><img id="zoom-img" alt=""></div>
 </div>
@@ -405,9 +492,12 @@ function demoShot(n){
   openPreview(n, DEMO_IMGS[n]);
 }
 
+const TABMAP={'scr-home':'tab-home','scr-find':'tab-map','scr-found':'tab-map','scr-mapview':'tab-map','scr-track':'tab-save','scr-check':'tab-save','scr-preview':'tab-save','scr-err':'tab-save','scr-saved':'tab-save'};
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const sc=$(id); sc.classList.add('active'); sc.scrollTop=0;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(TABMAP[id]) $(TABMAP[id]).classList.add('active');
 }
 
 /* ===== Ban do SVG (mo phong bai xe, khong can du lieu dong) ===== */
@@ -415,52 +505,91 @@ function stalls(x,y,n,w,h,gap,vert){
   let s='';
   for(let i=0;i<n;i++){
     const xx=vert?x:x+i*(w+gap), yy=vert?y+i*(h+gap):y;
-    s+=`<rect x="${xx}" y="${yy}" width="${w}" height="${h}" rx="2" fill="none" stroke="rgba(90,70,140,.3)" stroke-width="1.5"/>`;
+    s+=`<rect x="${xx}" y="${yy}" width="${w}" height="${h}" rx="2" fill="none" stroke="#c6cede" stroke-width="1.5"/>`;
   }
   return s;
 }
 function carStall(x,y,w,h){
   return `
-    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="rgba(232,53,95,.14)" stroke="#e8355f" stroke-width="2"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="rgba(247,181,0,.2)" stroke="#f7b500" stroke-width="2"/>
     <text x="${x+w/2}" y="${y+h/2+5}" text-anchor="middle" font-size="${Math.min(w,h)*0.62}">\ud83d\ude97</text>`;
+}
+function roadChip(x,y,t){
+  return `<g transform="translate(${x},${y})"><rect x="-17" y="-8" width="34" height="15" rx="4" fill="#ffd84d" stroke="#e3b71f"/><text y="4" text-anchor="middle" font-size="8" font-weight="800" fill="#5b4a00">${t}</text></g>`;
+}
+function roadChipW(x,y,t){
+  return `<g transform="translate(${x},${y})"><rect x="-17" y="-8" width="34" height="15" rx="4" fill="#ffffff" stroke="#b9c4d8"/><text y="4" text-anchor="middle" font-size="8" font-weight="800" fill="#1e3a8a">${t}</text></g>`;
+}
+function cityCarPin(x,y){
+  return `
+  <g transform="translate(${x},${y})">
+    <circle r="17" fill="#f7b500" stroke="#fff" stroke-width="3"/>
+    <text y="6" text-anchor="middle" font-size="16">🚗</text>
+    <rect x="-42" y="24" width="84" height="20" rx="10" fill="#fff" stroke="#e2e6ee"/>
+    <text y="38" text-anchor="middle" fill="#28303f" font-size="10" font-weight="800">Xe của bạn</text>
+  </g>`;
 }
 function baseMap(w,h){
   return `
-    <rect width="${w}" height="${h}" fill="#f7f4ff"/>
-    ${stalls(18,16,5,40,24,8,false)}
-    ${stalls(258,16,5,40,24,8,true)}
-    ${stalls(18,h-40,4,40,24,8,false)}
-    ${stalls(18,80,3,40,24,8,true)}
-    <text x="60" y="${h-52}" fill="rgba(90,70,140,.55)" font-size="11" font-weight="700">KHU D</text>`;
+    <rect width="${w}" height="${h}" fill="#f0f2f6"/>
+    <path d="M ${w*0.62} ${-h*0.05} C ${w*0.48} ${h*0.16}, ${w*0.76} ${h*0.3}, ${w*0.6} ${h*0.48} C ${w*0.48} ${h*0.62}, ${w*0.8} ${h*0.72}, ${w*1.05} ${h*0.8}" fill="none" stroke="#c9e3f5" stroke-width="${Math.min(w,h)*0.1}" stroke-linecap="round"/>
+    <ellipse cx="${w*0.3}" cy="${h*0.34}" rx="${w*0.08}" ry="${h*0.05}" fill="#c9e3f5"/>
+    <rect x="${w*0.06}" y="${h*0.08}" width="${w*0.15}" height="${h*0.11}" rx="8" fill="#d8edda"/>
+    <rect x="${w*0.72}" y="${h*0.52}" width="${w*0.17}" height="${h*0.12}" rx="9" fill="#d8edda"/>
+    <rect x="${w*0.13}" y="${h*0.66}" width="${w*0.16}" height="${h*0.11}" rx="8" fill="#d8edda"/>
+    <path d="M 0 ${h*0.26} L ${w} ${h*0.4}" stroke="#d3dae5" stroke-width="7" fill="none"/>
+    <path d="M 0 ${h*0.26} L ${w} ${h*0.4}" stroke="#ffffff" stroke-width="4" fill="none"/>
+    <path d="M ${w*0.22} 0 L ${w*0.55} ${h}" stroke="#d3dae5" stroke-width="7" fill="none"/>
+    <path d="M ${w*0.22} 0 L ${w*0.55} ${h}" stroke="#ffffff" stroke-width="4" fill="none"/>
+    <path d="M 0 ${h*0.75} L ${w} ${h*0.6}" stroke="#d3dae5" stroke-width="6" fill="none"/>
+    <path d="M 0 ${h*0.75} L ${w} ${h*0.6}" stroke="#ffffff" stroke-width="3.5" fill="none"/>
+    <path d="M ${w*0.75} 0 L ${w*0.6} ${h}" stroke="#e2e7ef" stroke-width="3" fill="none"/>
+    <path d="M 0 ${h*0.55} L ${w} ${h*0.5}" stroke="#e2e7ef" stroke-width="3" fill="none"/>
+    ${roadChip(w*0.16,h*0.3,'QL1A')}
+    ${roadChip(w*0.66,h*0.13,'CT37')}
+    ${roadChipW(w*0.42,h*0.68,'AH14')}
+    <circle cx="${w*0.135}" cy="${h*0.135}" r="7" fill="#3aa757"/>
+    <path d="M ${w*0.135-3} ${h*0.135+2} l3 -5 l3 5 z" fill="#fff"/>
+    <circle cx="${w*0.8}" cy="${h*0.58}" r="7" fill="#3aa757"/>
+    <path d="M ${w*0.8-3} ${h*0.58+2} l3 -5 l3 5 z" fill="#fff"/>
+    <circle cx="${w*0.87}" cy="${h*0.7}" r="7" fill="#e11d48"/>
+    <text x="${w*0.87}" y="${h*0.7+3}" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">H</text>
+    <text x="${w*0.08}" y="${h*0.24}" font-size="9" font-weight="700" fill="#8b96b3">KHU ĐÔ THỊ</text>
+    <text x="${w*0.63}" y="${h*0.47}" font-size="9" font-weight="700" fill="#8b96b3">CÔNG VIÊN</text>
+    <text x="${w*0.5}" y="${h*0.06}" text-anchor="middle" font-size="12" font-weight="800" fill="#64748b">TTTM AEON</text>
+    <text x="${w*0.08}" y="${h*0.92}" font-size="9" font-weight="700" fill="#8b96b3">BÃI ĐỖ XE — KHU D</text>`;
 }
-const CAR={x:278,y:44}, ME={x:60,y:400}, LOSTME={x:250,y:430};
+const CAR={x:240,y:90}, ME={x:60,y:400}, LOSTME={x:250,y:430};
 function carPinNav(){
-  // xe nam trong o do thu 2 cua day doc ben phai (x258,y48,w40,h24)
-  return `
-    <rect x="258" y="48" width="40" height="24" rx="3" fill="rgba(232,53,95,.14)" stroke="#e8355f" stroke-width="2"/>
-    <text x="278" y="66" text-anchor="middle" font-size="15">\ud83d\ude97</text>
-    <text x="278" y="94" text-anchor="middle" fill="#d6336c" font-size="10" font-weight="800">XE C\u1EE6A B\u1EA0N</text>`;
+  return cityCarPin(CAR.x, CAR.y);
 }
 function navArrow(routeD, dur){
   // mui ten dieu huong kieu Google Maps chay doc tuyen (dau mui ten huong theo chieu di)
   return `
   <g>
     <g>
-      <circle r="14" fill="rgba(8,145,178,.18)"/>
-      <path d="M11 0 L-8 8 L-4 0 L-8 -8 Z" fill="#0891b2" stroke="#fff" stroke-width="1.6"/>
+      <circle r="14" fill="rgba(30,58,138,.18)"/>
+      <path d="M11 0 L-8 8 L-4 0 L-8 -8 Z" fill="#1e3a8a" stroke="#fff" stroke-width="1.6"/>
       <animateMotion dur="${dur}" repeatCount="indefinite" rotate="auto" path="${routeD}"/>
     </g>
   </g>`;
 }
 function startDot(x,y){
-  return `<circle cx="${x}" cy="${y}" r="5" fill="#fff" stroke="#0891b2" stroke-width="3"/>`;
-}
-function lostDot(x,y){
+  // cham vang phat sang: vi tri hien tai
   return `
   <g transform="translate(${x},${y})">
-    <circle r="14" fill="rgba(232,53,95,.2)"><animate attributeName="r" values="10;18;10" dur="1.6s" repeatCount="indefinite"/></circle>
-    <path d="M0 -11 L8 7 L0 3 L-8 7 Z" fill="#e8355f" stroke="#fff" stroke-width="1.6"/>
-    <text x="0" y="30" text-anchor="middle" fill="#d6336c" font-size="10" font-weight="800">V\u1ECA TR\u00CD HI\u1EC6N T\u1EA0I</text>
+    <circle r="13" fill="rgba(247,181,0,.3)"><animate attributeName="r" values="9;16;9" dur="2s" repeatCount="indefinite"/></circle>
+    <circle r="6" fill="#f7b500" stroke="#fff" stroke-width="2.5"/>
+  </g>`;
+}
+function lostDot(x,y){
+  // di nham huong: mui ten do + nhan pill xanh navy
+  return `
+  <g transform="translate(${x},${y})">
+    <circle r="14" fill="rgba(225,29,72,.18)"><animate attributeName="r" values="10;18;10" dur="1.6s" repeatCount="indefinite"/></circle>
+    <path d="M0 -11 L8 7 L0 3 L-8 7 Z" fill="#e11d48" stroke="#fff" stroke-width="1.6"/>
+    <rect x="-56" y="-46" width="112" height="20" rx="10" fill="#1e3a8a"/>
+    <text x="0" y="-32" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">VỊ TRÍ HIỆN TẠI</text>
   </g>`;
 }
 function routePath(d,color,dim){return `
@@ -475,33 +604,55 @@ function drawNav(){
   const W=320,H=470;
   let inner='';
   if(navState==='ok'){
-    inner=routePath(ROUTE_OK,'#0891b2')+carPinNav()+startDot(ME.x,ME.y-24)+navArrow(ROUTE_OK,'9s');
+    inner=routePath(ROUTE_OK,'#1e3a8a')+carPinNav()+startDot(ME.x,ME.y-24)+navArrow(ROUTE_OK,'9s');
   }else if(navState==='lost'){
-    inner=routePath(ROUTE_OK,'#b6aed1',true)+carPinNav()+lostDot(LOSTME.x,LOSTME.y);
+    inner=routePath(ROUTE_OK,'#c3cad9',true)+carPinNav()+lostDot(LOSTME.x,LOSTME.y);
   }else{
-    inner=routePath(ROUTE_NEW,'#10b981')+carPinNav()+startDot(LOSTME.x,LOSTME.y-24)+navArrow(ROUTE_NEW,'9s');
+    inner=routePath(ROUTE_NEW,'#149e60')+carPinNav()+startDot(LOSTME.x,LOSTME.y-24)+navArrow(ROUTE_NEW,'9s');
   }
   $('navmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
 }
-function miniMapSVG(){
+function miniMapSVG(withCar){
   const W=300,H=170;
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${W}" height="${H}" fill="#f7f4ff"/>
-    <line x1="10" y1="${H/2}" x2="${W-10}" y2="${H/2}" stroke="rgba(90,70,140,.25)" stroke-width="2" stroke-dasharray="8 8"/>
-    ${stalls(14,12,6,44,30,3,false)}
-    ${stalls(14,H-42,6,44,30,3,false)}
-    ${carStall(14+3*(44+3),12,44,30)}
-    <text x="${W-16}" y="${H/2-8}" text-anchor="end" fill="rgba(90,70,140,.55)" font-size="11" font-weight="700">KHU D</text>
-    <text x="16" y="${H/2+16}" fill="rgba(90,70,140,.45)" font-size="9" font-weight="600">L\u1ED0I \u0110I</text>
+    ${baseMap(W,H)}
+    ${withCar?cityCarPin(W*0.68,H*0.4):''}
   </svg>`;
 }
+
+/* ===== Dan vao cho dau / tab Ban do ===== */
+function curDot(x,y){
+  return `
+  <g transform="translate(${x},${y})">
+    <circle r="16" fill="rgba(247,181,0,.3)"><animate attributeName="r" values="12;20;12" dur="2s" repeatCount="indefinite"/></circle>
+    <circle r="7" fill="#f7b500" stroke="#fff" stroke-width="3"/>
+    <rect x="-56" y="-50" width="112" height="20" rx="10" fill="#1e3a8a"/>
+    <text x="0" y="-36" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">VỊ TRÍ HIỆN TẠI</text>
+  </g>`;
+}
+function drawTrack(){
+  const W=320,H=380;
+  $('trackmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${curDot(160,240)}</svg>`;
+}
+function drawMapView(){
+  const has=!!state.savedAt;
+  const W=320,H=430;
+  const inner=has?carPinNav():curDot(160,280);
+  $('mapviewmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
+  $('mapview-pill').textContent=has?'Vị trí xe: Khu D — Cột D5':'Chưa lưu vị trí xe';
+  $('mapview-find').style.display=has?'':'none';
+  $('mapview-park').style.display=has?'none':'';
+}
+function goTrack(){ drawTrack(); show('scr-track'); }
+function goMapView(){ drawMapView(); show('scr-mapview'); }
+function goSpot(){ if(state.savedAt){ renderSaved(); show('scr-saved'); } else { goTrack(); } }
 
 /* ===== Luong luu: chup 2 anh + GPS tu luu ===== */
 function startSave(){
   pending=null;
   state={photos:{}, startedAt:Date.now(), savedAt:null, elapsed:null};
   document.querySelectorAll('.photo-slot').forEach(s=>{s.classList.remove('filled'); s.querySelector('img')?.remove();});
-  $('minimap').innerHTML=miniMapSVG();
+  $('minimap').innerHTML=miniMapSVG(true);
   show('scr-check');
   clearInterval(timerInt);
   timerInt=setInterval(()=>{ $('timer').textContent=((Date.now()-state.startedAt)/1000).toFixed(1).replace('.',',')+' s'; },100);
@@ -588,7 +739,7 @@ function errShoot(){
 function fmtTime(ts){return new Date(ts).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});}
 function renderSaved(){
   $('saved-when').textContent='Đã lưu trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
-  $('savedmap').innerHTML=miniMapSVG();
+  $('savedmap').innerHTML=miniMapSVG(true);
   $('saved-tag').innerHTML='🛰️ GPS đã lưu '+fmtTime(state.savedAt);
   $('saved-photos').innerHTML=[1,2].map(n=>
     state.photos[n]?`<img src="${state.photos[n]}" style="object-position:${DEMO_POS[n]||'center'}" onclick="zoom(this.src)">`:'' ).join('');
@@ -597,20 +748,21 @@ function renderSaved(){
 function goHome(){
   clearInterval(timerInt);
   const has=!!state.savedAt;
-  $('btn-find').style.display=has?'':'none';
-  $('saved-badge').style.display=has?'flex':'none';
-  $('bigwrap').style.display=has?'none':'flex';
-  $('home-title').textContent=has?'Xe đã được ghi nhớ 👌':'Vừa đỗ xe xong?';
-  $('home-sub').textContent=has?'Cứ thong thả. Khi quay ra bãi xe, bấm Tìm xe.':'Chụp 2 ảnh, GPS tự lưu. Khi quay ra, bản đồ dẫn bạn về đúng chỗ xe, ra nhầm lối cũng không sao.';
-  if(has){
-    $('badge-loc').textContent='GPS vị trí xe đã lưu';
-    $('badge-time').textContent='lưu lúc '+fmtTime(state.savedAt)+(state.elapsed?' · trong '+state.elapsed.toFixed(1).replace('.',',')+' s':'');
-  }
+  $('homemap').innerHTML=miniMapSVG(has);
+  $('home-title').textContent=has?'Đã Lưu Vị Trí':'Chưa Lưu Vị Trí';
+  $('home-sub').textContent=has
+    ?('Khu D — Cột D5 · GPS đã lưu lúc '+fmtTime(state.savedAt)+(state.elapsed?' · trong '+state.elapsed.toFixed(1).replace('.',',')+' s':''))
+    :'Bấm "Dẫn Vào Chỗ Đậu" khi bạn chuẩn bị đỗ xe';
+  document.querySelector('.statuscard').classList.toggle('saved',has);
+  $('car-ico').textContent=has?'🚘':'🅿️';
+  $('btn-save').style.display=has?'none':'flex';
+  $('btn-find').style.display=has?'flex':'none';
   show('scr-home');
 }
 
 /* ===== Tim xe: ban do + am thanh, giả lap di nham loi ===== */
 function goFind(){
+  if(!state.savedAt){ goTrack(); return; }
   navState='ok';
   $('find-when').textContent='GPS \u0111\u00e3 l\u01b0u l\u00fac '+fmtTime(state.savedAt);
   $('banner-lost').classList.remove('show');
@@ -633,8 +785,9 @@ function simLost(){
   drawNav();
   $('banner-ok').classList.remove('show');
   $('banner-lost').classList.add('show');
-  $('voice-txt').textContent='Đang tính lại đường...';
-  $('distpill').textContent='Đi nhầm lối';
+  $('voice-txt').textContent='Đi nhầm hướng, vui lòng quay đầu lại';
+  $('distpill').textContent='Quay đầu lại';
+  speakGuide();
 }
 function simReroute(){
   navState='rerouted';
@@ -665,8 +818,9 @@ function endSession(){
 
 try{
   const saved=JSON.parse(localStorage.getItem('wdip'));
-  if(saved&&saved.savedAt){state=saved; goHome();}
+  if(saved&&saved.savedAt){state=saved;}
 }catch(e){}
+goHome();
 </script>
 
 </body>
