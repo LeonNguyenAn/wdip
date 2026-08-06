@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#0a0f1e">
+<meta name="theme-color" content="#fdfcff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Where Did I Park?</title>
 <style>
   :root{
-    --bg0:#0a0f1e; --bg1:#101830;
-    --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.10);
-    --stroke:rgba(255,255,255,.12);
-    --text:#f4f7ff; --muted:#93a1c0;
-    --blue:#4f8ef7; --blue2:#7b6cff; --green:#34d59b; --red:#ff6b6b;
-    --grad:linear-gradient(135deg,#4f8ef7,#7b6cff);
-    --gradG:linear-gradient(135deg,#34d59b,#1fb98c);
+    --bg0:#fdfcff; --bg1:#f3eefe;
+    --glass:#ffffff; --glass2:#f1ecfb;
+    --stroke:rgba(45,28,90,.12);
+    --text:#241743; --muted:#7a6f99;
+    --blue:#0891b2; --blue2:#5b8cff; --green:#0d9464; --red:#e8355f; --amber:#d97706;
+    --grad:linear-gradient(135deg,#ff7a59,#ff4d9d);
+    --gradG:linear-gradient(135deg,#22d3ee,#3ee08f);
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
     font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:
-      radial-gradient(90vw 60vh at 85% -10%, rgba(123,108,255,.22), transparent 60%),
-      radial-gradient(80vw 50vh at -10% 100%, rgba(79,142,247,.18), transparent 60%),
+      radial-gradient(90vw 60vh at 85% -10%, rgba(255,77,157,.12), transparent 60%),
+      radial-gradient(80vw 50vh at -10% 100%, rgba(34,211,238,.12), transparent 60%),
       linear-gradient(180deg,var(--bg0),var(--bg1));
     background-attachment:fixed;
     color:var(--text); display:flex; justify-content:center; min-height:100%;
@@ -44,7 +44,7 @@
     width:38px;height:38px;border-radius:12px;border:1px solid var(--stroke);
     background:var(--glass); color:var(--text); font-size:1.3rem; cursor:pointer; flex:none;
   }
-  header h1{font-size:1.22rem; font-weight:700; letter-spacing:.2px}
+  header h1{font-size:1.2rem; font-weight:700; letter-spacing:.2px}
   .sub{color:var(--muted); font-size:.85rem; margin-top:2px}
 
   /* ===== HOME ===== */
@@ -52,17 +52,17 @@
   .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.05rem; letter-spacing:.4px; color:var(--muted)}
   .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--grad)}
   .hero h2{font-size:1.7rem; font-weight:800; letter-spacing:-.3px}
-  .hero p{color:var(--muted); font-size:.95rem; max-width:290px; line-height:1.5}
+  .hero p{color:var(--muted); font-size:.95rem; max-width:300px; line-height:1.5}
 
   .bigwrap{position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center}
-  .ring{position:absolute; inset:0; border-radius:50%; border:2px dashed rgba(123,140,255,.35); animation:spin 22s linear infinite}
+  .ring{position:absolute; inset:0; border-radius:50%; border:2px dashed rgba(255,122,89,.45); animation:spin 22s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .pulse{position:absolute; inset:14px; border-radius:50%; background:radial-gradient(circle,rgba(79,142,247,.35),transparent 70%); animation:pulse 2.4s ease-in-out infinite}
+  .pulse{position:absolute; inset:14px; border-radius:50%; background:radial-gradient(circle,rgba(255,77,157,.4),transparent 70%); animation:pulse 2.4s ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(.92);opacity:.7} 50%{transform:scale(1.06);opacity:1}}
   .bigbtn{
     position:relative; width:176px;height:176px;border-radius:50%;border:none;cursor:pointer;
     background:var(--grad); color:#fff; font-family:inherit; font-size:1.16rem; font-weight:800;
-    box-shadow:0 18px 50px rgba(79,142,247,.5), inset 0 2px 10px rgba(255,255,255,.35);
+    box-shadow:0 18px 50px rgba(255,77,157,.5), inset 0 2px 10px rgba(255,255,255,.35);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
     transition:transform .12s ease;
   }
@@ -70,36 +70,29 @@
   .bigbtn .icon{font-size:2.3rem; filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
 
   .ghostbtn{
-    width:100%; padding:16px; border-radius:18px; border:1px solid rgba(52,213,155,.5);
-    background:rgba(52,213,155,.08); color:var(--green); font-family:inherit;
+    width:100%; padding:16px; border-radius:18px; border:1px solid rgba(16,185,129,.45);
+    background:rgba(16,185,129,.08); color:#0d9464; font-family:inherit;
     font-size:1.05rem; font-weight:700; cursor:pointer;
   }
-  .ghostbtn:disabled{opacity:.3}
   .savedcard{
     width:100%; background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
     padding:14px 16px; display:flex; align-items:center; gap:12px; text-align:left;
     backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
   }
-  .savedcard .ok{width:38px;height:38px;border-radius:12px;background:var(--gradG);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
+  .savedcard .ok{width:38px;height:38px;border-radius:12px;color:#fff;background:var(--gradG);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
   .savedcard b{font-size:.95rem}
   .savedcard small{color:var(--muted)}
 
-  /* ===== SAVE ===== */
-  .steps{display:flex; align-items:center; gap:8px; margin:0 0 10px}
-  .step{flex:1; height:5px; border-radius:3px; background:var(--glass2); overflow:hidden; position:relative}
-  .step.on::after{content:''; position:absolute; inset:0; background:var(--grad); border-radius:3px; animation:fill .4s ease}
-  @keyframes fill{from{transform:scaleX(0)} to{transform:none}}
-
+  /* ===== CHECK HUB (Kiem tra thong tin) ===== */
   .timerpill{
     margin-left:auto; flex:none;
-    background:rgba(79,142,247,.18); border:1px solid rgba(79,142,247,.55); color:#9cc0ff;
+    background:rgba(34,211,238,.12); border:1px solid rgba(8,145,178,.4); color:#0891b2;
     font-variant-numeric:tabular-nums; font-weight:800; font-size:.85rem;
     padding:6px 12px; border-radius:999px;
   }
-
-  .photo-row{display:flex; gap:10px; margin:8px 0 12px}
+  .photo-row{display:flex; gap:10px; margin:4px 0 12px}
   .photo-slot{
-    flex:1; height:118px; border-radius:16px; border:2px dashed rgba(147,161,192,.4);
+    flex:1; height:128px; border-radius:16px; border:2px dashed rgba(147,161,192,.4);
     background:var(--glass); display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
     color:var(--muted); font-size:.82rem; cursor:pointer; overflow:hidden; position:relative; text-align:center;
     transition:border-color .2s;
@@ -107,7 +100,7 @@
   .photo-slot img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
   .photo-slot .lbl{
     position:relative; z-index:1; width:100%; padding:10px 8px;
-    background:linear-gradient(transparent, rgba(6,10,20,.85)); font-weight:600;
+    background:linear-gradient(transparent, rgba(20,10,40,.75)); font-weight:600; color:#fff;
   }
   .photo-slot .cam{position:absolute; top:34%; left:50%; transform:translate(-50%,-50%); font-size:1.5rem; opacity:.6}
   .photo-slot.filled{border-style:solid; border-color:var(--green)}
@@ -120,30 +113,28 @@
   @keyframes pop{from{transform:scale(0)} to{transform:none}}
   .photo-slot input{display:none}
 
-  .field{margin-bottom:10px}
-  .field label{display:block; font-size:.7rem; color:var(--muted); margin-bottom:5px; font-weight:700; text-transform:uppercase; letter-spacing:1px}
-  .chips{display:flex; flex-wrap:wrap; gap:7px}
-  .chip{
-    padding:8px 13px; border-radius:18px; border:1px solid var(--stroke); background:var(--glass);
-    color:var(--text); font-family:inherit; font-size:.88rem; font-weight:600; cursor:pointer;
-    transition:transform .12s, background .15s, border-color .15s;
+  .gpscard{
+    background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
+    padding:12px; margin-bottom:12px; text-align:center;
   }
-  .chip:active{transform:scale(.94)}
-  .chip.on{background:var(--grad); border-color:transparent; font-weight:800; box-shadow:0 8px 20px rgba(79,142,247,.4)}
-
-  .hint{display:none; color:#ffcf8a; font-size:.78rem; font-weight:700; margin-top:5px}
-  .field.missing .hint{display:block; animation:rise .25s ease}
-  .field.missing .chips{outline:1.5px dashed rgba(255,182,77,.7); outline-offset:5px; border-radius:12px}
+  .gpscard .mapbox{border-radius:12px; overflow:hidden; background:#f7f4ff; border:1px solid var(--stroke)}
+  .gpscard .mapbox svg{display:block; width:100%; height:auto}
+  .gpstag{
+    display:inline-flex; align-items:center; gap:8px; margin-top:10px;
+    background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.4); color:#0d9464;
+    font-weight:800; font-size:.88rem; padding:7px 14px; border-radius:999px;
+  }
+  .gpstag .sat{display:inline-block; animation:bob 2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(1px)}50%{transform:translateY(-2px)}}
 
   .primary{
     width:100%; padding:14px; border-radius:16px; border:none; margin-top:8px;
-    background:var(--gradG); color:#04231a; font-family:inherit; font-size:1.08rem; font-weight:800; cursor:pointer;
-    box-shadow:0 14px 34px rgba(52,213,155,.35);
+    background:var(--gradG); color:#053b2b; font-family:inherit; font-size:1.05rem; font-weight:800; cursor:pointer;
+    box-shadow:0 14px 34px rgba(34,211,238,.35);
     transition:transform .12s, opacity .2s;
   }
   .primary:active{transform:scale(.97)}
-  .primary.dim{background:var(--glass2); color:var(--muted); box-shadow:none}
-
+  .primary.blue{background:linear-gradient(135deg,#22d3ee,#5b8cff); color:#0b2447; box-shadow:0 14px 34px rgba(34,211,238,.4)}
   .secondary{
     width:100%; padding:13px; border-radius:14px; border:1px solid var(--stroke); margin-top:10px;
     background:var(--glass); color:var(--text); font-family:inherit; font-size:.95rem; font-weight:700; cursor:pointer;
@@ -158,8 +149,22 @@
   .preview .btns .editbtn{flex:1}
   .preview .btns .primary{flex:1.3; margin-top:0}
 
-  /* ===== CONFIRM ===== */
-  .confirm{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center}
+  /* ===== ERROR / STATE SCREENS ===== */
+  .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
+  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
+    display:flex;align-items:center;justify-content:center;font-size:2.6rem}
+  .ended .bin.good{border-color:rgba(62,224,143,.65)}
+  .ended .bin.warn{border-color:rgba(255,193,77,.65)}
+  .ended h2{font-size:1.4rem;font-weight:800}
+  .ended p{color:var(--muted); font-size:.93rem; max-width:300px; line-height:1.5}
+  .ended .kicker{color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase}
+  .ended .primary,.ended .secondary{max-width:300px}
+  .checklist{
+    background:#ffe9ef; border:1px solid rgba(232,53,95,.4); border-radius:14px;
+    padding:12px 18px; text-align:left; font-size:.92rem; line-height:1.9;
+  }
+  .checklist .miss{color:#d6336c; font-weight:700}
+
   .checkwrap{width:96px; height:96px}
   .checkwrap svg{width:100%; height:100%}
   .checkwrap .c{stroke:var(--green); stroke-width:5; fill:none; stroke-linecap:round;
@@ -167,64 +172,55 @@
   .checkwrap .m{stroke:var(--green); stroke-width:7; fill:none; stroke-linecap:round; stroke-linejoin:round;
     stroke-dasharray:80; stroke-dashoffset:80; animation:draw .5s ease .55s forwards}
   @keyframes draw{to{stroke-dashoffset:0}}
-  .confirm h2{font-size:1.45rem; font-weight:800}
-  .confirm .time{
-    font-size:1.15rem; font-weight:800; font-variant-numeric:tabular-nums;
-    background:var(--gradG); -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .confirm p{color:var(--muted); font-size:.93rem; max-width:280px; line-height:1.5}
-  .infocard{
-    width:100%; max-width:340px; background:var(--glass); border:1px solid var(--stroke); border-radius:18px;
-    padding:14px 16px; text-align:center;
-  }
-  .infocard b{font-size:1.05rem}
-  .infocard .ent{color:var(--muted); font-size:.88rem; margin-top:4px}
-  .thumbs{display:flex; gap:10px; width:100%; max-width:340px}
-  .thumbs img{flex:1; width:50%; height:120px; object-fit:cover; border-radius:14px; border:1px solid var(--stroke); cursor:zoom-in}
 
-  /* ===== FIND ===== */
-  .loc-card{
-    background:var(--grad); border-radius:20px; padding:14px 16px; margin-bottom:10px;
-    box-shadow:0 18px 44px rgba(79,142,247,.35); position:relative; overflow:hidden;
+  /* ===== NAV MAP ===== */
+  .mapwrap{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#f7f4ff; position:relative}
+  .mapwrap svg{display:block; width:100%; height:auto}
+  .distpill{
+    position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
+    background:rgba(36,23,67,.9); border:1px solid rgba(255,255,255,.2); color:#fff;
+    font-weight:800; font-size:.88rem; padding:7px 16px; border-radius:999px; white-space:nowrap;
   }
-  .loc-card::after{content:''; position:absolute; top:-40%; right:-20%; width:70%; height:180%;
-    background:radial-gradient(circle, rgba(255,255,255,.25), transparent 65%)}
-  .loc-card .big{font-size:1.7rem; font-weight:800; letter-spacing:-.3px; line-height:1.1}
-  .loc-card .big small{font-size:.78rem; font-weight:600; opacity:.85; display:block; margin-bottom:3px; letter-spacing:.8px; text-transform:uppercase}
-  .loc-card .row{display:flex; gap:7px; flex-wrap:wrap; margin-top:12px; position:relative; z-index:1}
-  .loc-chip{background:rgba(255,255,255,.18); padding:6px 11px; border-radius:11px; font-weight:600; font-size:.8rem; backdrop-filter:blur(4px)}
-  .duration{margin-top:12px; font-size:.78rem; color:rgba(255,255,255,.9); position:relative; z-index:1}
+  .banner{
+    position:absolute; left:12px; right:12px; top:12px; text-align:center;
+    border-radius:12px; padding:9px 10px; font-weight:800; font-size:.86rem; display:none;
+  }
+  .banner.red{background:#ffe9ef; border:1px solid rgba(232,53,95,.5); color:#d6336c}
+  .banner.green{background:#e5f8ef; border:1px solid rgba(16,185,129,.5); color:#0d9464}
+  .banner.show{display:block; animation:rise .3s ease}
+  .spin{display:inline-block; width:14px; height:14px; border:2px solid rgba(214,51,108,.3); border-top-color:#d6336c;
+    border-radius:50%; animation:spinner .8s linear infinite; vertical-align:-2px; margin-left:6px}
+  @keyframes spinner{to{transform:rotate(360deg)}}
 
-  .photos-view{display:flex; gap:10px; margin-bottom:10px}
-  .photos-view figure{flex:1}
-  .photos-view img{width:100%; height:150px; object-fit:cover; border-radius:14px; cursor:zoom-in; border:1px solid var(--stroke)}
-  .photos-view figcaption{font-size:.74rem; color:var(--muted); text-align:center; margin-top:4px; font-weight:600}
-  .note-view{
+  .voicebar{
+    display:flex; align-items:center; gap:10px; margin-top:10px;
     background:var(--glass); border:1px solid var(--stroke); border-radius:14px; padding:10px 14px;
-    font-size:.87rem; line-height:1.45; margin-bottom:10px;
   }
-  .note-view b{color:var(--green)}
-  .rowbtns{display:flex; gap:10px; margin-top:auto; padding-top:4px}
+  .voicebar .spk{
+    width:40px; height:40px; border-radius:12px; border:none; background:var(--grad); color:#fff;
+    font-size:1.15rem; cursor:pointer; flex:none;
+  }
+  .voicebar .txt{font-size:.92rem; font-weight:700}
+  .voicebar .eq{display:flex; gap:2px; margin-left:auto; align-items:flex-end; height:18px}
+  .voicebar .eq i{width:3px; background:var(--blue); border-radius:2px; animation:eq 0.9s ease-in-out infinite}
+  .voicebar .eq i:nth-child(1){height:8px} .voicebar .eq i:nth-child(2){height:16px; animation-delay:.15s}
+  .voicebar .eq i:nth-child(3){height:11px; animation-delay:.3s} .voicebar .eq i:nth-child(4){height:15px; animation-delay:.45s}
+  @keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+
+  .photos-mini{display:flex; gap:10px; margin-top:10px}
+  .photos-mini img{flex:1; width:50%; height:86px; object-fit:cover; border-radius:12px; border:1px solid var(--stroke); cursor:zoom-in}
+
+  .rowbtns{display:flex; gap:10px; margin-top:12px}
   .editbtn{
     flex:1; padding:13px 8px; border-radius:14px; border:1px solid var(--stroke);
-    background:var(--glass); color:var(--text); font-family:inherit; font-weight:700; font-size:.9rem; cursor:pointer;
+    background:var(--glass); color:var(--text); font-family:inherit; font-weight:700; font-size:.88rem; cursor:pointer;
   }
   .foundbtn{
-    flex:1.4; padding:13px 8px; border-radius:14px; border:none;
-    background:var(--gradG); color:#04231a; font-family:inherit; font-weight:800; font-size:.95rem; cursor:pointer;
-    box-shadow:0 12px 30px rgba(52,213,155,.35);
+    flex:1.35; padding:13px 8px; border-radius:14px; border:none;
+    background:var(--gradG); color:#053b2b; font-family:inherit; font-weight:800; font-size:.93rem; cursor:pointer;
+    box-shadow:0 12px 30px rgba(62,224,143,.35);
   }
   .footnote{color:var(--muted); font-size:.75rem; text-align:center; margin-top:10px; line-height:1.4}
-
-  /* ===== FULLSCREEN STATES ===== */
-  .ended{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center}
-  .ended .bin{width:92px;height:92px;border-radius:50%;background:var(--glass2);border:1px solid var(--stroke);
-    display:flex;align-items:center;justify-content:center;font-size:2.6rem}
-  .ended .bin.good{border-color:rgba(52,213,155,.6)}
-  .ended h2{font-size:1.4rem;font-weight:800}
-  .ended p{color:var(--muted); font-size:.93rem; max-width:290px; line-height:1.5}
-  .ended .kicker{color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase}
-  .ended .primary,.ended .secondary{max-width:280px}
 
   /* ===== OVERLAYS ===== */
   .zoom{position:fixed; inset:0; background:rgba(2,5,12,.95); display:none; align-items:center; justify-content:center; z-index:50; cursor:zoom-out}
@@ -243,7 +239,7 @@
       <div class="brand"><span class="dot"></span>WHERE DID I PARK?</div>
       <div>
         <h2 id="home-title">Vừa đỗ xe xong?</h2>
-        <p id="home-sub">Lưu vị trí chỉ trong ít giây, khỏi lo quên chỗ đậu. Dữ liệu chỉ nằm trên máy bạn.</p>
+        <p id="home-sub">Chụp 2 ảnh, GPS tự lưu. Khi quay ra, bản đồ dẫn bạn về đúng chỗ xe, ra nhầm lối cũng không sao.</p>
       </div>
       <div class="bigwrap" id="bigwrap">
         <div class="ring"></div><div class="pulse"></div>
@@ -259,14 +255,13 @@
     </div>
   </section>
 
-  <!-- SAVE -->
-  <section class="screen" id="scr-save">
+  <!-- CHECK HUB: Kiem tra thong tin -->
+  <section class="screen" id="scr-check">
     <header>
       <button class="back" onclick="goHome()">‹</button>
-      <div><h1>Lưu vị trí</h1><div class="sub">2 ảnh + 4 lựa chọn là xong</div></div>
+      <div><h1>Kiểm tra thông tin</h1><div class="sub">2 ảnh + GPS tự lưu là xong</div></div>
       <div class="timerpill" id="timer">0,0 s</div>
     </header>
-    <div class="steps"><div class="step on"></div><div class="step" id="step2"></div></div>
 
     <div class="photo-row">
       <label class="photo-slot" id="slot1">
@@ -277,36 +272,16 @@
       <label class="photo-slot" id="slot2">
         <input type="file" accept="image/*" capture="environment" onchange="setPhoto(this,2)">
         <span class="cam">🪧</span><span class="badge">✓</span>
-        <span class="lbl">Ảnh 2/2 — biển cột</span>
+        <span class="lbl">Ảnh 2/2 — vị trí đỗ xe</span>
       </label>
     </div>
 
-    <div class="field"><label>Tầng / Khu vực</label>
-      <div class="chips" data-key="floor">
-        <button class="chip">Sân ngoài trời</button><button class="chip">Tầng thượng (T3)</button><button class="chip">Hầm B1</button>
-      </div>
-      <div class="hint">Chọn Tầng</div>
-    </div>
-    <div class="field"><label>Khu</label>
-      <div class="chips" data-key="zone">
-        <button class="chip">A</button><button class="chip">B</button><button class="chip">C</button><button class="chip">D</button><button class="chip">E</button><button class="chip">G</button>
-      </div>
-      <div class="hint">Chọn Khu</div>
-    </div>
-    <div class="field"><label>Cột / Dãy gần nhất</label>
-      <div class="chips" data-key="pillar">
-        <button class="chip">1</button><button class="chip">2</button><button class="chip">3</button><button class="chip">4</button><button class="chip">5</button><button class="chip">6</button><button class="chip">7</button><button class="chip">8</button>
-      </div>
-      <div class="hint">Chọn Cột</div>
-    </div>
-    <div class="field"><label>Lối vào TTTM</label>
-      <div class="chips" data-key="entrance">
-        <button class="chip">Cổng 7 (D5)</button><button class="chip">Cổng 8 (17A)</button><button class="chip">Cổng 10 (Tên Lửa)</button><button class="chip">Thang máy bãi xe</button>
-      </div>
-      <div class="hint">Chọn Lối vào</div>
+    <div class="gpscard">
+      <div class="mapbox" id="minimap"></div>
+      <div class="gpstag"><span class="sat">🛰️</span> GPS đã lưu</div>
     </div>
 
-    <button class="primary dim" id="btn-done" onclick="finishSave()">Chọn đủ 4 mục</button>
+    <button class="primary" id="btn-done" onclick="finishSave()">Lưu vị trí</button>
   </section>
 
   <!-- PHOTO PREVIEW -->
@@ -322,61 +297,80 @@
     </div>
   </section>
 
-  <!-- CHECK: thieu anh -->
-  <section class="screen" id="scr-check">
+  <!-- ERROR: thieu anh -->
+  <section class="screen" id="scr-err">
     <div class="ended">
       <div class="kicker">Kiểm tra thông tin</div>
-      <div class="bin">⚠️</div>
-      <h2 id="chk-title">Thiếu ảnh biển cột</h2>
-      <p>Chụp đủ ảnh xe và biển cột để lưu vị trí chính xác.</p>
-      <button class="primary" id="chk-btn" onclick="checkShoot()">Chụp biển cột</button>
-      <button class="secondary" onclick="show('scr-save')">Quay lại</button>
+      <div class="bin warn">⚠️</div>
+      <h2 id="err-title">Thiếu ảnh xe</h2>
+      <div class="checklist" id="err-list" style="display:none">
+        <div>Ảnh xe <span class="miss" id="miss1">✗ Thiếu</span></div>
+        <div>Ảnh vị trí đỗ xe <span class="miss" id="miss2">✗ Thiếu</span></div>
+      </div>
+      <p id="err-sub">Cần chụp ảnh xe trước khi lưu.</p>
+      <button class="primary" id="err-btn" onclick="errShoot()">Chụp ảnh xe</button>
+      <button class="secondary" onclick="show('scr-check')">Quay lại</button>
     </div>
   </section>
 
-  <!-- CONFIRM: da luu -->
-  <section class="screen" id="scr-confirm">
-    <div class="confirm">
+  <!-- SAVED -->
+  <section class="screen" id="scr-saved">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Vị trí xe đã lưu</h1><div class="sub" id="saved-when"></div></div>
+    </header>
+    <div class="gpscard">
+      <div class="mapbox" id="savedmap"></div>
+      <div class="gpstag" id="saved-tag">🛰️ GPS đã lưu</div>
+    </div>
+    <div class="photos-mini" id="saved-photos"></div>
+    <button class="primary blue" onclick="goFind()">Tìm xe</button>
+    <button class="secondary" onclick="goHome()">Về màn hình chính</button>
+  </section>
+
+  <!-- FIND / NAV -->
+  <section class="screen" id="scr-find">
+    <header>
+      <button class="back" onclick="goHome()">‹</button>
+      <div><h1>Dẫn đường tới xe</h1><div class="sub" id="find-when"></div></div>
+    </header>
+
+    <div class="mapwrap">
+      <div id="navmap"></div>
+      <div class="banner red" id="banner-lost">⚠️ Đi nhầm lối - đang tạo đường mới<span class="spin"></span></div>
+      <div class="banner green" id="banner-ok">✓ Đã chuyển hướng</div>
+      <div class="distpill" id="distpill">Còn khoảng 40 m</div>
+    </div>
+
+    <div class="voicebar">
+      <button class="spk" onclick="speakGuide()">🔊</button>
+      <div class="txt" id="voice-txt">Đi thẳng 20 m, rẽ phải</div>
+      <div class="eq"><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="photos-mini" id="find-photos"></div>
+
+    <div class="rowbtns">
+      <button class="editbtn" onclick="wrongTurn()">↩️ Giả lập đi nhầm lối</button>
+      <button class="foundbtn" onclick="foundCar()">✓ Đã tìm thấy xe</button>
+    </div>
+    <div class="footnote">Bấm "Đã tìm thấy xe" khi bạn đã đứng cạnh xe</div>
+  </section>
+
+  <!-- FOUND -->
+  <section class="screen" id="scr-found">
+    <div class="ended">
       <div class="checkwrap">
         <svg viewBox="0 0 110 110">
           <circle class="c" cx="55" cy="55" r="50"/>
           <path class="m" d="M34 57 l14 14 l28 -30"/>
         </svg>
       </div>
-      <h2>Đã lưu vị trí xe</h2>
-      <div class="time" id="confirm-time"></div>
-      <div class="infocard">
-        <b id="confirm-loc"></b>
-        <div class="ent" id="confirm-ent"></div>
-      </div>
-      <div class="thumbs" id="confirm-photos"></div>
-      <button class="primary" style="max-width:340px" onclick="goFind()">Tìm xe</button>
-      <button class="secondary" style="max-width:340px" onclick="goHome()">Về màn hình chính</button>
+      <h2>Đã tìm thấy xe</h2>
+      <p>Chúc bạn lái xe an toàn. Kết thúc phiên để xóa toàn bộ dữ liệu vị trí.</p>
+      <button class="primary" onclick="askEnd()">Kết thúc phiên</button>
+      <button class="secondary" onclick="goFind()">Quay lại bản đồ</button>
     </div>
-  </section>
-
-  <!-- FIND -->
-  <section class="screen" id="scr-find">
-    <header>
-      <button class="back" onclick="goHome()">‹</button>
-      <div><h1>Xe của bạn ở đây</h1><div class="sub" id="find-when"></div></div>
-    </header>
-
-    <div class="loc-card">
-      <div class="big"><small id="find-floor"></small><span id="find-pillar"></span></div>
-      <div class="row" id="find-chips"></div>
-      <div class="duration" id="find-duration"></div>
-    </div>
-
-    <div class="photos-view" id="find-photos"></div>
-    <div class="note-view" id="find-note"></div>
-
-    <div class="rowbtns">
-      <button class="editbtn" onclick="editSave()">✏️ Sửa vị trí</button>
-      <button class="foundbtn" onclick="askEnd()">✓ Đã tìm thấy xe</button>
-    </div>
-    <button class="secondary" onclick="stayFind()">Chưa, tiếp tục xem vị trí</button>
-    <div class="footnote">Bấm "Đã tìm thấy xe" để kết thúc phiên và xóa dữ liệu</div>
   </section>
 
   <!-- END CONFIRM -->
@@ -394,8 +388,8 @@
   <section class="screen" id="scr-ended">
     <div class="ended">
       <div class="bin good" style="color:var(--green)">✓</div>
-      <h2>Đã kết thúc phiên</h2>
-      <p>Dữ liệu vị trí xe đã được xóa.<br>Không còn ảnh hoặc thông tin vị trí được lưu.</p>
+      <h2>Hoàn tất - dữ liệu đã được xóa</h2>
+      <p>Không còn ảnh hoặc thông tin vị trí được lưu.</p>
       <button class="primary" onclick="goHome()">Về màn hình chính</button>
     </div>
   </section>
@@ -406,28 +400,83 @@
 
 <script>
 const $=id=>document.getElementById(id);
-let state={photos:{}, sel:{}, startedAt:null, savedAt:null, elapsed:null};
-let timerInt=null, editing=false, pending=null;
+let state={photos:{}, startedAt:null, savedAt:null, elapsed:null};
+let timerInt=null, pending=null, navState='ok';
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const sc=$(id); sc.classList.add('active'); sc.scrollTop=0;
 }
 
-function startSave(){
-  editing=false; pending=null;
-  state={photos:{}, sel:{}, startedAt:Date.now(), savedAt:null, elapsed:null};
-  document.querySelectorAll('.photo-slot').forEach(s=>{s.classList.remove('filled'); s.querySelector('img')?.remove();});
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
-  $('step2').classList.remove('on');
-  refreshDone();
-  show('scr-save');
-  clearInterval(timerInt);
-  timerInt=setInterval(()=>{ $('timer').textContent=((Date.now()-state.startedAt)/1000).toFixed(1).replace('.',',')+' s'; },100);
+/* ===== Ban do SVG (mo phong bai xe Aeon, khong can du lieu dong) ===== */
+function stalls(x,y,n,w,h,gap,vert){
+  let s='';
+  for(let i=0;i<n;i++){
+    const xx=vert?x:x+i*(w+gap), yy=vert?y+i*(h+gap):y;
+    s+=`<rect x="${xx}" y="${yy}" width="${w}" height="${h}" rx="2" fill="none" stroke="rgba(90,70,140,.3)" stroke-width="1.5"/>`;
+  }
+  return s;
+}
+function baseMap(w,h){
+  return `
+    <rect width="${w}" height="${h}" fill="#f7f4ff"/>
+    ${stalls(18,16,5,40,24,8,false)}
+    ${stalls(258,16,5,40,24,8,true)}
+    ${stalls(18,h-40,4,40,24,8,false)}
+    ${stalls(18,80,3,40,24,8,true)}
+    <text x="60" y="${h-52}" fill="rgba(90,70,140,.55)" font-size="11" font-weight="700">KHU D</text>`;
+}
+const CAR={x:278,y:44}, ME={x:60,y:400}, LOSTME={x:250,y:430};
+function pin(x,y){return `
+  <g transform="translate(${x},${y})">
+    <circle r="13" fill="#ff5d7e"/><text x="0" y="4.5" text-anchor="middle" font-size="13">🚗</text>
+    <text x="0" y="28" text-anchor="middle" fill="#d6336c" font-size="10" font-weight="800">XE CỦA BẠN</text>
+  </g>`;}
+function medot(x,y){return `
+  <g transform="translate(${x},${y})">
+    <circle r="16" fill="rgba(34,211,238,.25)"><animate attributeName="r" values="12;20;12" dur="2s" repeatCount="indefinite"/></circle>
+    <circle r="7" fill="#22d3ee" stroke="#fff" stroke-width="2"/>
+    <text x="0" y="26" text-anchor="middle" fill="#0e7490" font-size="10" font-weight="800">VỊ TRÍ HIỆN TẠI</text>
+  </g>`;}
+function routePath(d,color,dim){return `
+  <path d="${d}" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round"
+    stroke-dasharray="10 8" opacity="${dim?0.35:1}">
+    ${dim?'':'<animate attributeName="stroke-dashoffset" values="36;0" dur="1.2s" repeatCount="indefinite"/>'}
+  </path>`;}
+const ROUTE_OK  =`M ${ME.x} ${ME.y-24} C 60 300, 100 220, 150 180 C 200 140, 240 100, ${CAR.x-8} ${CAR.y+30}`;
+const ROUTE_NEW =`M ${LOSTME.x} ${LOSTME.y-24} C 250 360, 200 260, 170 200 C 150 160, 240 100, ${CAR.x-8} ${CAR.y+30}`;
+
+function drawNav(){
+  const W=320,H=470;
+  let inner='';
+  if(navState==='ok')       inner=routePath(ROUTE_OK,'#0891b2')+pin(CAR.x,CAR.y)+medot(ME.x,ME.y);
+  else if(navState==='lost')inner=routePath(ROUTE_OK,'#b6aed1',true)+pin(CAR.x,CAR.y)+medot(LOSTME.x,LOSTME.y);
+  else                      inner=routePath(ROUTE_NEW,'#10b981')+pin(CAR.x,CAR.y)+medot(LOSTME.x,LOSTME.y);
+  $('navmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
+}
+function miniMapSVG(){
+  const W=300,H=170;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${W}" height="${H}" fill="#f7f4ff"/>
+    ${stalls(14,12,6,38,22,7,false)}
+    ${stalls(14,H-34,6,38,22,7,false)}
+    <g transform="translate(${W/2},${H/2+4})">
+      <circle r="12" fill="#ff5d7e"/><text x="0" y="4" text-anchor="middle" font-size="12">🚗</text>
+    </g>
+  </svg>`;
 }
 
-/* --- chup anh: chup -> xem lai -> Dung anh --- */
+/* ===== Luong luu: chup 2 anh + GPS tu luu ===== */
+function startSave(){
+  pending=null;
+  state={photos:{}, startedAt:Date.now(), savedAt:null, elapsed:null};
+  document.querySelectorAll('.photo-slot').forEach(s=>{s.classList.remove('filled'); s.querySelector('img')?.remove();});
+  $('minimap').innerHTML=miniMapSVG();
+  show('scr-check');
+  clearInterval(timerInt);
+  timerInt=setInterval(()=>{ $('timer').textContent=((Date.now()-state.startedAt)/1000).toFixed(1).replace('.',',')+' s'; },100);
+  setTimeout(()=>triggerShot(1), 350);
+}
 function setPhoto(input,n){
   const f=input.files[0]; if(!f) return;
   const r=new FileReader();
@@ -436,20 +485,21 @@ function setPhoto(input,n){
 }
 function openPreview(n,src){
   pending={n,src};
-  $('pv-title').textContent = n===1 ? 'Ảnh xe' : 'Ảnh biển cột';
+  $('pv-title').textContent = n===1 ? 'Ảnh xe' : 'Ảnh vị trí đỗ xe';
   $('pv-count').textContent = n+' / 2';
   $('pv-img').src=src;
   show('scr-preview');
 }
 function retakePhoto(){
   const n=pending.n; pending=null;
-  show('scr-save');
+  show('scr-check');
   triggerShot(n);
 }
 function acceptPhoto(){
   const {n,src}=pending; pending=null;
   commitPhoto(n,src);
-  show('scr-save');
+  show('scr-check');
+  if(n===1 && !state.photos[2]) setTimeout(()=>triggerShot(2), 350);
 }
 function commitPhoto(n,src){
   state.photos[n]=src;
@@ -457,38 +507,8 @@ function commitPhoto(n,src){
   slot.querySelector('img')?.remove();
   const img=document.createElement('img'); img.src=src; slot.prepend(img);
   slot.classList.add('filled');
-  if(state.photos[1]&&state.photos[2]) $('step2').classList.add('on');
 }
 function triggerShot(n){ $('slot'+n).querySelector('input').click(); }
-
-/* --- chon chip --- */
-document.querySelectorAll('.chips').forEach(g=>{
-  g.addEventListener('click',e=>{
-    if(!e.target.classList.contains('chip')) return;
-    g.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-    e.target.classList.add('on');
-    state.sel[g.dataset.key]=e.target.textContent;
-    g.closest('.field').classList.remove('missing');
-    refreshDone();
-  });
-});
-
-function selComplete(){ return state.sel.floor&&state.sel.zone&&state.sel.pillar&&state.sel.entrance; }
-function refreshDone(){
-  const ok=selComplete();
-  $('btn-done').textContent= ok ? 'Xong ✓' : 'Chọn đủ 4 mục';
-  $('btn-done').classList.toggle('dim', !ok);
-}
-function showMissing(){
-  document.querySelectorAll('.field').forEach(f=>{
-    const k=f.querySelector('.chips')?.dataset.key;
-    if(k) f.classList.toggle('missing', !state.sel[k]);
-  });
-  const first=document.querySelector('.field.missing');
-  first?.scrollIntoView({behavior:'smooth', block:'center'});
-}
-
-function locString(s){return `${s.floor} · Khu ${s.zone} · Cột ${s.zone}${s.pillar}`;}
 
 function persist(){
   try{localStorage.setItem('wdip',JSON.stringify(state));}
@@ -501,37 +521,47 @@ function persist(){
 }
 
 function finishSave(){
-  if(!selComplete()){ showMissing(); return; }
-  if(!state.photos[1] || !state.photos[2]){ openCheck(); return; }
+  const m1=!state.photos[1], m2=!state.photos[2];
+  if(m1||m2){ openErr(m1,m2); return; }
   clearInterval(timerInt);
-  if(editing){
-    editing=false;
-    persist();
-    goFind();
-    return;
-  }
   state.savedAt=Date.now();
   state.elapsed=(state.savedAt-state.startedAt)/1000;
   persist();
-  $('confirm-time').textContent='Đã lưu trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
-  $('confirm-loc').textContent=locString(state.sel);
-  $('confirm-ent').textContent='📍 Vào từ '+state.sel.entrance;
-  $('confirm-photos').innerHTML=[1,2].map(n=>
-    state.photos[n]?`<img src="${state.photos[n]}" onclick="zoom(this.src)">`:'' ).join('');
-  show('scr-confirm');
+  renderSaved();
+  show('scr-saved');
+}
+function openErr(m1,m2){
+  if(m1&&m2){
+    $('err-title').textContent='Chưa đủ thông tin';
+    $('err-list').style.display='block';
+    $('err-sub').textContent='Không cho lưu cho đến khi đủ 2 ảnh.';
+    $('err-btn').textContent='Chụp bổ sung';
+  }else if(m1){
+    $('err-title').textContent='Thiếu ảnh xe';
+    $('err-list').style.display='none';
+    $('err-sub').textContent='Cần chụp ảnh xe trước khi lưu.';
+    $('err-btn').textContent='Chụp ảnh xe';
+  }else{
+    $('err-title').textContent='Thiếu ảnh vị trí đỗ xe';
+    $('err-list').style.display='none';
+    $('err-sub').textContent='Cần chụp cột hoặc khu vực đỗ xe.';
+    $('err-btn').textContent='Chụp ảnh vị trí';
+  }
+  show('scr-err');
+}
+function errShoot(){
+  const n=!state.photos[1]?1:2;
+  show('scr-check');
+  triggerShot(n);
 }
 
-/* --- man kiem tra thieu anh (bat buoc du 2 anh) --- */
-function openCheck(){
-  const m1=!state.photos[1], m2=!state.photos[2];
-  $('chk-title').textContent = m1&&m2 ? 'Thiếu ảnh xe và biển cột' : (m2 ? 'Thiếu ảnh biển cột' : 'Thiếu ảnh xe');
-  $('chk-btn').textContent   = m1&&m2 ? 'Chụp ảnh còn thiếu'       : (m2 ? 'Chụp biển cột'       : 'Chụp ảnh xe');
-  show('scr-check');
-}
-function checkShoot(){
-  const n = !state.photos[1] ? 1 : 2;
-  show('scr-save');
-  triggerShot(n);
+function fmtTime(ts){return new Date(ts).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});}
+function renderSaved(){
+  $('saved-when').textContent='Đã lưu trong '+state.elapsed.toFixed(1).replace('.',',')+' giây';
+  $('savedmap').innerHTML=miniMapSVG();
+  $('saved-tag').innerHTML='🛰️ GPS đã lưu '+fmtTime(state.savedAt);
+  $('saved-photos').innerHTML=[1,2].map(n=>
+    state.photos[n]?`<img src="${state.photos[n]}" onclick="zoom(this.src)">`:'' ).join('');
 }
 
 function goHome(){
@@ -541,61 +571,60 @@ function goHome(){
   $('saved-badge').style.display=has?'flex':'none';
   $('bigwrap').style.display=has?'none':'flex';
   $('home-title').textContent=has?'Xe đã được ghi nhớ 👌':'Vừa đỗ xe xong?';
-  $('home-sub').textContent=has?'Cứ thong thả. Khi quay ra bãi xe, bấm Tìm xe.':'Lưu vị trí chỉ trong ít giây, khỏi lo quên chỗ đậu. Dữ liệu chỉ nằm trên máy bạn.';
+  $('home-sub').textContent=has?'Cứ thong thả. Khi quay ra bãi xe, bấm Tìm xe.':'Chụp 2 ảnh, GPS tự lưu. Khi quay ra, bản đồ dẫn bạn về đúng chỗ xe, ra nhầm lối cũng không sao.';
   if(has){
-    $('badge-loc').textContent=locString(state.sel);
-    $('badge-time').textContent='lưu lúc '+new Date(state.savedAt).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+(state.elapsed?' · trong '+state.elapsed.toFixed(1).replace('.',',')+' s':'');
+    $('badge-loc').textContent='GPS vị trí xe đã lưu';
+    $('badge-time').textContent='lưu lúc '+fmtTime(state.savedAt)+(state.elapsed?' · trong '+state.elapsed.toFixed(1).replace('.',',')+' s':'');
   }
   show('scr-home');
 }
 
-function fmtDur(ms){
-  const m=Math.floor(ms/60000);
-  if(m<1) return 'vài giây';
-  return m<60? m+' phút' : Math.floor(m/60)+' giờ '+(m%60)+' phút';
-}
-
+/* ===== Tim xe: ban do + am thanh, giả lap di nham loi ===== */
 function goFind(){
-  const s=state;
-  $('find-when').textContent='Lưu lúc '+new Date(s.savedAt).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+(s.elapsed?' · trong '+s.elapsed.toFixed(1).replace('.',',')+' s':'');
-  $('find-floor').textContent=s.sel.floor;
-  $('find-pillar').textContent='Cột '+s.sel.zone+s.sel.pillar;
-  const chips=[['Khu',s.sel.zone],['Lối vào',s.sel.entrance||'—']];
-  $('find-chips').innerHTML=chips.map(([k,v])=>`<div class="loc-chip">${k}: ${v}</div>`).join('');
-  $('find-duration').textContent='⏱ Xe đã đỗ được '+fmtDur(Date.now()-s.savedAt);
-  $('find-photos').innerHTML=[[1,'Ảnh xe'],[2,'Biển khu / cột']].map(([n,cap])=>
-    s.photos[n]?`<figure><img src="${s.photos[n]}" onclick="zoom(this.src)"><figcaption>${cap}</figcaption></figure>`:'' ).join('');
-  $('find-note').innerHTML=s.sel.entrance
-    ? `💡 Bạn đã vào TTTM từ <b>${s.sel.entrance}</b> — hãy quay lại đúng lối đó rồi đối chiếu ảnh biển cột.`
-    : `💡 Đối chiếu ảnh biển cột với các biển xung quanh để xác định hướng đi.`;
+  navState='ok';
+  $('find-when').textContent='GPS đã lưu lúc '+fmtTime(state.savedAt);
+  $('banner-lost').classList.remove('show');
+  $('banner-ok').classList.remove('show');
+  $('voice-txt').textContent='Đi thẳng 20 m, rẽ phải';
+  $('distpill').textContent='Còn khoảng 40 m';
+  $('find-photos').innerHTML=[1,2].map(n=>
+    state.photos[n]?`<img src="${state.photos[n]}" onclick="zoom(this.src)">`:'' ).join('');
+  drawNav();
   show('scr-find');
 }
-function stayFind(){ $('scr-find').scrollTop=0; }
-
-function zoom(src){$('zoom-img').src=src;$('zoom').classList.add('show');}
+function wrongTurn(){
+  if(navState!=='ok') return;
+  navState='lost';
+  drawNav();
+  $('banner-ok').classList.remove('show');
+  $('banner-lost').classList.add('show');
+  $('voice-txt').textContent='Đang tính lại đường...';
+  $('distpill').textContent='Đi nhầm lối';
+  setTimeout(()=>{
+    navState='rerouted';
+    drawNav();
+    $('banner-lost').classList.remove('show');
+    $('banner-ok').classList.add('show');
+    $('voice-txt').textContent='Quay lại 10 m, rẽ trái';
+    $('distpill').textContent='Còn khoảng 55 m';
+    speakGuide();
+  }, 1600);
+}
+function speakGuide(){
+  try{
+    const u=new SpeechSynthesisUtterance($('voice-txt').textContent);
+    u.lang='vi-VN'; u.rate=1;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+function foundCar(){ show('scr-found'); }
 function askEnd(){ show('scr-endconfirm'); }
 
-function editSave(){
-  editing=true;
-  clearInterval(timerInt);
-  $('timer').textContent='Sửa vị trí';
-  document.querySelectorAll('.photo-slot').forEach((s,i)=>{
-    const n=i+1;
-    s.querySelector('img')?.remove();
-    if(state.photos[n]){const img=document.createElement('img');img.src=state.photos[n];s.prepend(img);s.classList.add('filled');}
-    else s.classList.remove('filled');
-  });
-  document.querySelectorAll('.chips').forEach(g=>{
-    g.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on', c.textContent===state.sel[g.dataset.key]));
-  });
-  document.querySelectorAll('.field').forEach(f=>f.classList.remove('missing'));
-  refreshDone();
-  show('scr-save');
-}
+function zoom(src){$('zoom-img').src=src;$('zoom').classList.add('show');}
 
 function endSession(){
   localStorage.removeItem('wdip');
-  state={photos:{},sel:{},startedAt:null,savedAt:null,elapsed:null};
+  state={photos:{},startedAt:null,savedAt:null,elapsed:null};
   show('scr-ended');
 }
 
