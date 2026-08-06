@@ -14,24 +14,26 @@
     --green:#149e60;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
+  html,body{height:100%; overflow:hidden}
   body{
     font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:var(--bg);
     color:var(--text); display:flex; justify-content:center; min-height:100%;
   }
-  .phone{width:100%; max-width:430px; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; position:relative}
+  .phone{width:100%; max-width:430px; height:100vh; height:100dvh; display:flex; flex-direction:column; position:relative; overflow:hidden}
 
   .screen{
-    display:none; flex:1; flex-direction:column;
-    padding:max(18px, env(safe-area-inset-top)) 18px calc(104px + env(safe-area-inset-bottom));
+    display:none; flex:1; flex-direction:column; min-height:0;
+    padding:max(12px, env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom));
     overflow-y:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
   }
+  .screen::-webkit-scrollbar{display:none}
   .screen.active{display:flex; animation:rise .35s cubic-bezier(.2,.8,.25,1)}
   .screen > *{flex-shrink:0}
   @keyframes rise{from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:none}}
 
-  header{position:relative; display:flex; align-items:center; justify-content:center; text-align:center; min-height:44px; margin-bottom:14px}
+  header{position:relative; display:flex; align-items:center; justify-content:center; text-align:center; min-height:40px; margin-bottom:10px; flex-shrink:0}
   header .back{
     position:absolute; left:-6px; width:42px; height:42px; border:none; background:none;
     color:var(--navy); font-size:1.8rem; font-weight:700; cursor:pointer; line-height:1;
@@ -41,21 +43,21 @@
   .sub{color:var(--muted); font-size:.85rem; margin-top:2px; font-weight:500}
 
   /* ===== HOME ===== */
-  .appbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px}
+  .appbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
   .appbar .iconbtn{width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:var(--navy)}
   .appbar .iconbtn svg{width:26px; height:26px}
   .apptitle{font-size:1.45rem; font-weight:800; color:var(--navy)}
-  .homemapbox{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#eef1f6; margin-bottom:14px}
-  .homemapbox svg{display:block; width:100%; height:auto}
+  .homemapbox{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#eef1f6; margin-bottom:12px; flex:1 1 auto; min-height:100px}
+  .homemapbox svg{display:block; width:100%; height:100%}
 
   .statuscard{
     background:var(--card); border:1px solid var(--stroke); border-radius:20px;
     box-shadow:0 10px 28px rgba(30,58,138,.08);
-    padding:16px 18px; display:flex; align-items:center; gap:14px; margin-bottom:16px;
+    padding:14px 16px; display:flex; align-items:center; gap:14px; margin-bottom:12px; flex-shrink:0;
   }
   .statustext{flex:1; display:flex; flex-direction:column; gap:3px; text-align:left}
   .statustext small{color:var(--muted); font-size:.84rem; font-weight:600}
-  .statustext b{font-size:1.35rem; font-weight:800}
+  .statustext b{font-size:1.25rem; font-weight:800}
   .statustext .loc{color:var(--navy); font-weight:700; font-size:.94rem}
   .caricon{
     width:62px; height:62px; border-radius:50%; background:#e8ebf3; flex:none;
@@ -70,8 +72,8 @@
   .outlinebtn:active,.solidbtn:active{transform:scale(.97)}
   .outlinebtn{background:var(--card); border:2px solid var(--navy); color:var(--navy)}
   .solidbtn{background:var(--navy); border:none; color:#fff; box-shadow:0 14px 30px rgba(30,58,138,.28)}
-  .tall{flex-direction:column; gap:8px; padding:24px 16px; font-size:1.3rem; margin-bottom:14px}
-  .tall svg{width:34px; height:34px}
+  .tall{flex-direction:column; gap:6px; padding:16px; font-size:1.15rem; margin-bottom:12px; flex-shrink:0}
+  .tall svg{width:28px; height:28px}
 
   /* ===== CHECK HUB (Luu cho do) ===== */
   .timerpill{
@@ -80,9 +82,9 @@
     font-variant-numeric:tabular-nums; font-weight:800; font-size:.85rem;
     padding:6px 12px; border-radius:999px;
   }
-  .photo-row{display:flex; gap:10px; margin:4px 0 12px}
+  .photo-row{display:flex; gap:10px; margin:0 0 10px; flex-shrink:0}
   .photo-slot{
-    flex:1; height:128px; border-radius:16px; border:2px dashed rgba(30,58,138,.35);
+    flex:1; height:clamp(96px, 15vh, 128px); border-radius:16px; border:2px dashed rgba(30,58,138,.35);
     background:var(--card); display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
     color:var(--muted); font-size:.82rem; cursor:pointer; overflow:hidden; position:relative; text-align:center;
     transition:border-color .2s;
@@ -105,12 +107,13 @@
 
   .gpscard{
     background:var(--card); border:1px solid var(--stroke); border-radius:18px;
-    padding:12px; margin-bottom:12px; text-align:center;
+    padding:12px; margin-bottom:10px; text-align:center;
+    display:flex; flex-direction:column; flex:1 1 auto; min-height:150px;
   }
-  .gpscard .mapbox{border-radius:12px; overflow:hidden; background:#eef1f6; border:1px solid var(--stroke)}
-  .gpscard .mapbox svg{display:block; width:100%; height:auto}
+  .gpscard .mapbox{border-radius:12px; overflow:hidden; background:#eef1f6; border:1px solid var(--stroke); flex:1 1 auto; min-height:0}
+  .gpscard .mapbox svg{display:block; width:100%; height:100%}
   .gpstag{
-    display:inline-flex; align-items:center; gap:8px; margin-top:10px;
+    display:inline-flex; align-items:center; gap:8px; margin-top:10px; align-self:center; flex-shrink:0;
     background:#fff; border:1.5px solid var(--navy); color:var(--navy);
     font-weight:800; font-size:.88rem; padding:7px 14px; border-radius:999px;
   }
@@ -118,21 +121,21 @@
   @keyframes bob{0%,100%{transform:translateY(1px)}50%{transform:translateY(-2px)}}
 
   .primary{
-    width:100%; padding:15px; border-radius:20px; border:none; margin-top:8px;
+    width:100%; padding:13px; border-radius:20px; border:none; margin-top:8px; flex-shrink:0;
     background:var(--navy); color:#fff; font-family:inherit; font-size:1.05rem; font-weight:800; cursor:pointer;
     box-shadow:0 14px 30px rgba(30,58,138,.28);
     transition:transform .12s, opacity .2s;
   }
   .primary:active{transform:scale(.97)}
   .secondary{
-    width:100%; padding:13px; border-radius:16px; border:1.5px solid var(--navy); margin-top:10px;
+    width:100%; padding:11px; border-radius:16px; border:1.5px solid var(--navy); margin-top:8px; flex-shrink:0;
     background:var(--card); color:var(--navy); font-family:inherit; font-size:.95rem; font-weight:700; cursor:pointer;
   }
 
   /* ===== PREVIEW ===== */
-  .preview{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center}
+  .preview{flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; overflow:hidden}
   .preview h2{font-size:1.35rem; font-weight:800; color:var(--navy)}
-  .preview img{width:100%; max-width:340px; max-height:52vh; object-fit:cover; border-radius:18px; border:1px solid var(--stroke)}
+  .preview img{width:100%; max-width:340px; flex:1 1 auto; min-height:0; object-fit:cover; border-radius:18px; border:1px solid var(--stroke)}
   .preview .count{color:var(--muted); font-weight:700; font-size:.9rem}
   .preview .btns{display:flex; gap:10px; width:100%; max-width:340px}
   .preview .btns .editbtn{flex:1}
@@ -163,8 +166,8 @@
   @keyframes draw{to{stroke-dashoffset:0}}
 
   /* ===== NAV MAP ===== */
-  .mapwrap{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#eef1f6; position:relative}
-  .mapwrap svg{display:block; width:100%; height:auto}
+  .mapwrap{border-radius:18px; overflow:hidden; border:1px solid var(--stroke); background:#eef1f6; position:relative; flex:1 1 auto; min-height:130px}
+  .mapwrap svg{display:block; width:100%; height:100%}
   .distpill{
     position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
     background:var(--navy); color:#fff; border:none;
@@ -185,21 +188,22 @@
   /* ===== BOTTOM SHEET (Tim Xe) ===== */
   .sheet{
     background:var(--card); border:1px solid var(--stroke); border-radius:24px;
-    padding:12px 16px 16px; margin-top:12px;
+    padding:10px 14px 12px; margin-top:10px;
     box-shadow:0 12px 30px rgba(30,58,138,.10);
+    flex-shrink:0;
   }
-  .grab{width:52px; height:5px; border-radius:3px; background:#d5dae6; margin:0 auto 12px}
-  .sheethead{display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; text-align:left}
+  .grab{width:52px; height:5px; border-radius:3px; background:#d5dae6; margin:0 auto 8px}
+  .sheethead{display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; text-align:left}
   .sheethead > div:first-child{flex:1}
-  .sheethead h2{font-size:1.28rem; font-weight:800}
+  .sheethead h2{font-size:1.2rem; font-weight:800}
   .cancelchip{
     background:var(--red-soft); color:#be123c; border:1px solid rgba(225,29,72,.25);
     border-radius:999px; padding:8px 14px; font-family:inherit; font-weight:800; font-size:.88rem; cursor:pointer; flex:none;
   }
-  .inforow{display:flex; gap:10px; margin-bottom:12px}
+  .inforow{display:flex; gap:10px; margin-bottom:8px}
   .infocard{
     flex:1; background:#f6f7fb; border:1px solid var(--stroke); border-radius:16px;
-    padding:12px; display:flex; flex-direction:column; gap:6px; text-align:left; min-width:0;
+    padding:10px; display:flex; flex-direction:column; gap:5px; text-align:left; min-width:0;
   }
   .infocard small{color:var(--muted); font-weight:600; font-size:.8rem}
   .infocard b{font-size:1.02rem; font-weight:800}
@@ -210,7 +214,7 @@
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;
   }
   .play svg{width:15px; height:15px}
-  .photolabelwrap{position:relative; margin-bottom:12px}
+  .photolabelwrap{position:relative; margin-bottom:8px}
   .photolabelwrap .photos-mini{margin-top:0}
   .photolabel{
     position:absolute; top:8px; left:8px; z-index:2;
@@ -218,22 +222,22 @@
     padding:5px 10px; border-radius:9px;
   }
   .photos-mini{display:flex; gap:10px; margin-top:10px}
-  .photos-mini img{flex:1; width:50%; height:100px; object-fit:cover; border-radius:14px; border:1px solid var(--stroke); cursor:zoom-in}
+  .photos-mini img{flex:1; width:50%; height:clamp(60px, 10vh, 96px); object-fit:cover; border-radius:14px; border:1px solid var(--stroke); cursor:zoom-in}
 
   .editbtn{
     flex:1; padding:13px 8px; border-radius:16px; border:1.5px solid var(--navy);
     background:var(--card); color:var(--navy); font-family:inherit; font-weight:700; font-size:.88rem; cursor:pointer;
   }
-  .footnote{color:var(--muted); font-size:.75rem; text-align:center; margin-top:12px; line-height:1.4}
+  .footnote{color:var(--muted); font-size:.72rem; text-align:center; margin-top:6px; line-height:1.35}
 
-  .trackhint{color:var(--muted); font-size:.85rem; text-align:center; margin:12px 6px}
+  .trackhint{color:var(--muted); font-size:.83rem; text-align:center; margin:8px 6px; flex-shrink:0}
 
   /* ===== TAB BAR ===== */
   .tabbar{
     position:fixed; bottom:0; left:50%; transform:translateX(-50%);
     width:100%; max-width:430px; z-index:30;
     background:#f8f9fc; border-top:1px solid var(--stroke);
-    display:flex; gap:8px; padding:10px 16px calc(12px + env(safe-area-inset-bottom));
+    display:flex; gap:8px; padding:8px 16px calc(10px + env(safe-area-inset-bottom));
   }
   .tab{
     flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
@@ -610,11 +614,11 @@ function drawNav(){
   }else{
     inner=routePath(ROUTE_NEW,'#149e60')+carPinNav()+startDot(LOSTME.x,LOSTME.y-24)+navArrow(ROUTE_NEW,'9s');
   }
-  $('navmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
+  $('navmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
 }
 function miniMapSVG(withCar){
   const W=300,H=170;
-  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     ${baseMap(W,H)}
     ${withCar?cityCarPin(W*0.68,H*0.4):''}
   </svg>`;
@@ -632,13 +636,13 @@ function curDot(x,y){
 }
 function drawTrack(){
   const W=320,H=380;
-  $('trackmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${curDot(160,240)}</svg>`;
+  $('trackmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${curDot(160,240)}</svg>`;
 }
 function drawMapView(){
   const has=!!state.savedAt;
   const W=320,H=430;
   const inner=has?carPinNav():curDot(160,280);
-  $('mapviewmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
+  $('mapviewmap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${baseMap(W,H)}${inner}</svg>`;
   $('mapview-pill').textContent=has?'Vị trí xe: Khu D — Cột D5':'Chưa lưu vị trí xe';
   $('mapview-find').style.display=has?'':'none';
   $('mapview-park').style.display=has?'none':'';
